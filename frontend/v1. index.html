@@ -1,1 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>UrbanNav v1</title>
+  <link rel="stylesheet" href="style_v1.css">
+</head>
+<body>
 
+  <header>
+    <h1>UrbanNav</h1>
+  </header>
+
+  <main>
+    <section>
+      <h2>Plan Your Route</h2>
+
+      <input type="text" id="fromInput" placeholder="Start location">
+      <input type="text" id="toInput" placeholder="Destination">
+
+      <button id="findRouteBtn">Find Route</button>
+    </section>
+
+    <section id="transportModes" style="display:none;">
+      <h2>Transport Mode</h2>
+
+      <button>Walk</button>
+      <button>Bike</button>
+      <button>Drive</button>
+      <button>Transit</button>
+    </section>
+
+    <section id="routeDetails">
+      <h2>Route Details</h2>
+      <p>Route information will appear here.</p>
+    </section>
+  </main>
+
+</body>
+</html>
