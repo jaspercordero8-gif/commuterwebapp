@@ -1,0 +1,40 @@
+/* style_v1.css - Basic styling (MVP version) */
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  margin: 0;
+  padding: 20px;
+}
+
+h1 {
+  text-align: center;
+  color: #333;
+}
+
+section {
+  background-color: #ffffff;
+  padding: 15px;
+  margin-bottom: 15px;
+  border: 1px solid #ddd;
+}
+
+input {
+  display: block;
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+}
+
+button {
+  width: 100%;
+  padding: 10px;
+  background-color: #007BFF;
+  color: white;
+  border: none;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
