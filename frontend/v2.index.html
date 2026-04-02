@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>UrbanNav v2</title>
+
+  <!-- Improved styling -->
+  <link rel="stylesheet" href="style.css">
+
+
+  <script src="../backend/config.js"></script>
+
+  <!-- Main JavaScript -->
+  <script defer src="app.js"></script>
+</head>
+
+<body>
+
+  <header>
+    <h1>UrbanNav</h1>
+  </header>
+
+  <main>
+    <section>
+      <h2>Plan Your Route</h2>
+
+      <input type="text" id="fromInput" placeholder="Start location">
+      <input type="text" id="toInput" placeholder="Destination">
+
+      <button id="findRouteBtn">Find Route</button>
+    </section>
+
+    <section id="transportModes">
+      <h2>Transport Mode</h2>
+
+      <button data-mode="walking">Walk</button>
+      <button data-mode="bicycling">Bike</button>
+      <button data-mode="driving">Drive</button>
+      <button data-mode="transit">Transit</button>
+    </section>
+
+    <section id="routeDetails">
+      <h2>Route Details</h2>
+      <p id="routeOutput">Route information will appear here.</p>
+    </section>
+
+    <!-- Map container (NEW in v2) -->
+    <section>
+      <h2>Map</h2>
+      <div id="map" style="width:100%; height:300px;"></div>
+    </section>
+
+  </main>
+
+</body>
+</html>
