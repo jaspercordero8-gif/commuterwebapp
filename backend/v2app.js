@@ -78,4 +78,11 @@ transportButtons.forEach(button => {
   });
 });
 
+routeDetails.innerHTML = `
+  <h2>Route Details</h2>
+  <p><strong>From:</strong> ${from}</p>
+  <p><strong>To:</strong> ${to}</p>
+  <p><strong>Mode:</strong> ${selectedMode}</p>
+`;
+
 const app = new UrbanNavApp();
