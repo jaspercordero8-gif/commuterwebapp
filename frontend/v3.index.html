@@ -1,0 +1,74 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UrbanNav v3</title>
+  <link rel="stylesheet" href="style_v3.css">
+
+  <script>
+    function isDesktop() { return window.innerWidth >= 769; }
+
+    window._onWeatherReady = function() {
+      var btn = document.getElementById('mobileWeatherBtn');
+      var sec = document.getElementById('weatherSection');
+      if (isDesktop()) {
+        btn.style.display = 'none';
+        sec.style.display = 'block';
+      } else {
+        btn.style.display = 'flex';
+        sec.style.display = 'none';
+      }
+    };
+
+    window._onEcoReady = function() {
+      var btn = document.getElementById('mobileEcoBtn');
+      var sec = document.getElementById('environmentSection');
+      if (isDesktop()) {
+        btn.style.display = 'none';
+        sec.style.display = 'block';
+      } else {
+        btn.style.display = 'flex';
+        sec.style.display = 'none';
+      }
+    };
+  </script>
+</head>
+
+<body>
+
+<header class="top-nav">
+  <span class="nav-brand-name">URBANNAV</span>
+</header>
+
+
+<button id="mobileWeatherBtn" style="display:none">Show Weather</button>
+
+<div id="weatherSection" class="section-card" style="display:none">
+  <p>WEATHER</p>
+  <div id="weatherInfo"></div>
+</div>
+
+<button id="mobileEcoBtn" style="display:none">Show Eco Impact</button>
+
+<div id="environmentSection" class="section-card" style="display:none">
+  <p>ECO IMPACT</p>
+  <div id="environmentInfo"></div>
+</div>
+
+<!-- MAP -->
+<div id="map"></div>
+
+<!-- Scripts -->
+<script src="config.js"></script>
+<script>
+  const _mapsScript = document.createElement('script');
+  _mapsScript.src = `https://maps.googleapis.com/maps/api/js?key=${CONFIG.GOOGLE_MAPS_KEY}&libraries=places`;
+  document.head.appendChild(_mapsScript);
+</script>
+<script src="app.js"></script>
+
+</body>
+</html>
