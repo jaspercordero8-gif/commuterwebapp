@@ -68,4 +68,14 @@ if (!from || !to) {
   return;
 }
 
+transportButtons.forEach(button => {
+  button.addEventListener("click", () => {
+
+    transportButtons.forEach(btn => btn.classList.remove("active"));
+    button.classList.add("active");
+
+    selectedMode = button.dataset.mode;
+  });
+});
+
 const app = new UrbanNavApp();
