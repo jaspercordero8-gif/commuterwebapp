@@ -59,4 +59,13 @@ class UrbanNavApp {
   }
 }
 
+// Trim input and validate properly
+const from = document.getElementById('fromInput').value.trim();
+const to = document.getElementById('toInput').value.trim();
+
+if (!from || !to) {
+  alert("Please enter both a start location and destination.");
+  return;
+}
+
 const app = new UrbanNavApp();
