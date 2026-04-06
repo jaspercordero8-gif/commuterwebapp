@@ -119,3 +119,8 @@ body {
   width: 100%;
   height: 400px;
 }
+
+#transportModes button.active {
+  background-color: #1e40af;
+  color: white;
+}
