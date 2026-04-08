@@ -1,0 +1,147 @@
+inex.html
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Urban Navigation </title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-gray-50">
+  <div class="flex h-screen relative">
+    <div id="sidebar" class="sidebar w-full md:w-96 bg-white shadow-lg">
+      <div class="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-4">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center">
+            <span class="text-2xl mr-2"></span>
+            <h1 class="text-xl font-bold">UrbanNav</h1>
+          </div>
+          <button id="closeSidebar" class="md:hidden text-white">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="p-4">
+        <!-- Route Planning Section -->
+        <div class="section-card">
+          <div class="flex items-center mb-3">
+            <span class="text-lg mr-2"></span>
+            <h2 class="font-semibold text-gray-800">Where are you going ?</h2>
+          </div>
+          
+          <div class="space-y-3">
+            <div>
+              <label class="text-xs text-gray-600 mb-1 block">▶ Start Point</label>
+              <input id="fromInput" type="text" placeholder="Enter start location" 
+                     class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none">
+            </div>
+            
+            <div>
+              <label class="text-xs text-gray-600 mb-1 block">📍 Destination</label>
+              <input id="toInput" type="text" placeholder="Enter destination" 
+                     class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none">
+            </div>
+            
+            <button id="findRouteBtn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg transition">
+              🔍 Find Routes
+            </button>
+          </div>
+        </div>
+
+        <!-- Transport Modes -->
+        <div id="transportModes" class="section-card hidden">
+          <div class="flex items-center mb-3">
+            <span class="text-lg mr-2">🚀</span>
+            <h2 class="font-semibold text-gray-800">Transport Modes</h2>
+          </div>
+          
+          <div class="grid grid-cols-2 gap-2 mb-2">
+            <button onclick="app.selectMode('WALKING')" class="mode-btn bg-gray-100 hover:bg-gray-200 py-3 rounded-lg font-medium text-sm">
+              🚶 Walk
+            </button>
+            <button onclick="app.selectMode('BICYCLING')" class="mode-btn bg-gray-100 hover:bg-gray-200 py-3 rounded-lg font-medium text-sm">
+              🚲 Bike
+            </button>
+            <button onclick="app.selectMode('DRIVING')" class="mode-btn bg-gray-100 hover:bg-gray-200 py-3 rounded-lg font-medium text-sm">
+              🚗 Drive
+            </button>
+            <button onclick="app.selectMode('TRANSIT')" class="mode-btn bg-gray-100 hover:bg-gray-200 py-3 rounded-lg font-medium text-sm">
+              🚇 Transit
+            </button>
+          </div>
+        </div>
+
+        <!-- Route Details -->
+        <div id="routeDetails" class="section-card hidden">
+          <div class="flex items-center justify-between mb-3">
+            <div class="flex items-center">
+              <span class="text-lg mr-2">ℹ️</span>
+              <h2 class="font-semibold text-gray-800">Route Details</h2>
+            </div>
+          </div>
+          <div id="routeInfo"></div>
+        </div>
+
+        <!-- Real-time Alerts -->
+        <div id="alertsSection" class="section-card hidden">
+          <div class="flex items-center mb-3">
+            <span class="text-lg mr-2">⚠️</span>
+            <h2 class="font-semibold text-gray-800">Real-time Alerts</h2>
+          </div>
+          <button onclick="app.loadLiveTransport()" class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 rounded-lg transition">
+            🚌 Load Live Transport Data
+          </button>
+          <div id="liveTransportInfo" class="mt-3"></div>
+        </div>
+
+        <!-- Destination Weather -->
+        <div id="weatherSection" class="section-card hidden">
+          <div class="flex items-center mb-3">
+            <span class="text-lg mr-2">🌤️</span>
+            <h2 class="font-semibold text-gray-800">Destination Weather</h2>
+          </div>
+          <div id="weatherInfo"></div>
+        </div>
+
+        <!-- Environmental Impact -->
+        <div id="environmentSection" class="section-card hidden">
+          <div class="flex items-center mb-3">
+            <span class="text-lg mr-2">🌱</span>
+            <h2 class="font-semibold text-gray-800">Environmental Impact</h2>
+          </div>
+          <div id="environmentInfo"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Map Container -->
+    <div class="flex-1 relative">
+      <div id="map"></div>
+      
+      <!-- Mobile Toggle Button -->
+      <button id="toggleSidebar" class="toggle-sidebar fixed top-4 left-4 z-50 bg-white rounded-full p-3 shadow-lg md:hidden">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+
+  <script src="config.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    // Load Google Maps API dynamically using config
+    const script = document.createElement('script');
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${CONFIG.GOOGLE_MAPS_KEY}&libraries=places`;
+    script.async = true;
+    script.defer = true;
+    document.head.appendChild(script);
+  </script>
+  <script src="app.js"></script>
+</body>
+</html>
