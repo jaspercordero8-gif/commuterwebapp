@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UrbanNav</title>
+
+  <!-- Poppins font for hero title -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;800;900&display=swap" rel="stylesheet">
+
+  <!-- Homepage styles -->
+  <link rel="stylesheet" href="home.css">
+
+
+  <style>
+    html {
+      font-size: 14px;
+      transition: font-size 0.2s ease;
+    }
+
+    /* ── Override ALL content font sizes to rem so they scale with the accessibility setting ── */
+
+    /* Nav */
+    .nav-brand-name    { font-size: 1.57rem; }   /* ~22px */
+    .nav-login-btn     { font-size: 1.07rem; }   /* ~15px */
+
+    /* Hero title — keep clamp but in rem */
+    .hero-title        { font-size: clamp(2.29rem, 6vw, 4.14rem); }
+
+    /* Search card */
+    .search-card-label { font-size: 0.93rem; }   /* ~13px */
+    .search-input      { font-size: 1.07rem; }   /* ~15px */
+    .time-label        { font-size: 1.07rem; }   /* ~15px */
+    .time-input        { font-size: 1rem;    }   /* ~14px */
+    .go-btn            { font-size: 1.14rem; }   /* ~16px */
+    .home-error        { font-size: 0.93rem; }   /* ~13px */
+    .tagline           { font-size: 0.93rem; }   /* ~13px */
+
+    /* Auth modal */
+    .auth-tab          { font-size: 0.93rem; }   /* ~13px */
+    .auth-field label  { font-size: 0.86rem; }   /* ~12px */
+    .auth-input        { font-size: 0.93rem; }   /* ~13px */
+    .auth-submit-btn   { font-size: 1rem;    }   /* ~14px */
+    .auth-switch       { font-size: 0.86rem; }   /* ~12px */
+    .auth-error        { font-size: 0.86rem; }   /* ~12px */
+    .modal-close-btn   { font-size: 1rem;    }   /* ~14px */
+
+    /* ── Accessibility button (nav-left) ── */
+    .home-acc-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      border: none;
+      background: rgba(255,255,255,0.15);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+      margin-left: 2px;
+      transition: background 0.2s ease, transform 0.1s;
+    }
+    .home-acc-btn:hover  { background: rgba(255,255,255,0.28); }
+    .home-acc-btn:active { transform: scale(0.92); }
+
+    /* ── Dropdown panel ── */
+    .home-acc-dropdown {
+      position: fixed;
+      top: calc(64px + 6px);
+      left: 10px;
+      width: 260px;
+      background: #ffffff;
+      border: 1px solid #E4E7EC;
+      border-radius: 14px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+      z-index: 3000;
+      overflow: hidden;
+    }
+    [data-theme="dark"] .home-acc-dropdown {
+      background: #161B22;
+      border-color: #30363D;
+    }
+
+    /* Arrow */
+    .home-acc-arrow {
+      position: absolute;
+      top: -7px;
+      left: 52px;
+      width: 14px;
+      height: 14px;
+      background: #ffffff;
+      border-left: 1px solid #E4E7EC;
+      border-top:  1px solid #E4E7EC;
+      transform: rotate(45deg);
+      z-index: 1;
+    }
+    [data-theme="dark"] .home-acc-arrow {
+      background: #161B22;
+      border-color: #30363D;
+    }
+
+    /* Header */
+    .home-acc-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 14px 10px;
+      border-bottom: 1px solid #E4E7EC;
+      font-size: 13px;
+      font-weight: 600;
+      color: #0D1117;
+      background: #ffffff;
+      position: relative;
+      z-index: 2;
+    }
+    [data-theme="dark"] .home-acc-header {
+      background: #161B22;
+      border-color: #30363D;
+      color: #E6EDF3;
+    }
+
+    .home-acc-close {
+      background: none;
+      border: none;
+      font-size: 13px;
+      color: #9AA0AD;
+      cursor: pointer;
+      padding: 2px 6px;
+      border-radius: 6px;
+      line-height: 1;
+    }
+    .home-acc-close:hover { background: #F7F8FA; }
+    [data-theme="dark"] .home-acc-close:hover { background: #30363D; }
+
+    /* Body */
+    .home-acc-body { padding: 14px; }
+
+    .home-acc-section-title {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      color: #9AA0AD;
+      margin-bottom: 10px;
+    }
+
+    /* Text size buttons — fixed px so preview A's always look different */
+    .home-acc-size-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 6px;
+      margin-bottom: 6px;
+    }
+
+    .home-acc-size-btn {
+      background: #F7F8FA;
+      border: 1.5px solid #E4E7EC;
+      border-radius: 8px;
+      padding: 8px 4px;
+      font-weight: 700;
+      color: #5A6170;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      line-height: 1;
+      font-size: 13px;
+    }
+    .home-acc-size-btn.home-size-mid   { font-size: 16px; }
+    .home-acc-size-btn.home-size-large { font-size: 20px; }
+
+    [data-theme="dark"] .home-acc-size-btn {
+      background: #1C2128;
+      border-color: #30363D;
+      color: #8B949E;
+    }
+    .home-acc-size-btn:hover { border-color: #1E40AF; color: #1E40AF; }
+    [data-theme="dark"] .home-acc-size-btn:hover { color: #93C5FD; border-color: #1E40AF; }
+    .home-acc-size-btn.home-acc-size-active {
+      background: #1E40AF;
+      border-color: #1E40AF;
+      color: #ffffff !important;
+    }
+
+    .home-acc-size-labels {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 6px;
+      text-align: center;
+      font-size: 10px;
+      color: #9AA0AD;
+      margin-bottom: 4px;
+    }
+
+    /* Divider */
+    .home-acc-divider {
+      height: 1px;
+      background: #E4E7EC;
+      margin: 12px 0;
+    }
+    [data-theme="dark"] .home-acc-divider { background: #30363D; }
+
+    /* Toggle row */
+    .home-acc-toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      margin-bottom: 6px;
+    }
+
+    .home-acc-toggle-label {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 13px;
+      font-weight: 500;
+      color: #0D1117;
+    }
+    [data-theme="dark"] .home-acc-toggle-label { color: #E6EDF3; }
+
+    /* Toggle switch */
+    .home-acc-switch {
+      width: 40px;
+      height: 22px;
+      background: #D0D5DD;
+      border-radius: 11px;
+      position: relative;
+      cursor: pointer;
+      transition: background 0.2s ease;
+      flex-shrink: 0;
+      outline: none;
+    }
+    .home-acc-switch:focus-visible { box-shadow: 0 0 0 2px #1E40AF; }
+    [aria-checked="true"].home-acc-switch { background: #1E40AF; }
+
+    .home-acc-switch-thumb {
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 16px;
+      height: 16px;
+      background: #ffffff;
+      border-radius: 50%;
+      transition: transform 0.2s ease;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.25);
+    }
+    [aria-checked="true"].home-acc-switch .home-acc-switch-thumb {
+      transform: translateX(18px);
+    }
+
+    .home-acc-hint {
+      font-size: 10px;
+      color: #9AA0AD;
+      line-height: 1.4;
+    }
+
+    /* Reset button */
+    .home-acc-reset {
+      width: 100%;
+      background: none;
+      border: 1.5px solid #E4E7EC;
+      border-radius: 8px;
+      padding: 7px 0;
+      font-size: 12px;
+      font-weight: 600;
+      color: #5A6170;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .home-acc-reset:hover {
+      border-color: #1E40AF;
+      color: #1E40AF;
+      background: #EFF6FF;
+    }
+    [data-theme="dark"] .home-acc-reset {
+      border-color: #30363D;
+      color: #8B949E;
+    }
+    [data-theme="dark"] .home-acc-reset:hover {
+      border-color: #1E40AF;
+      color: #93C5FD;
+      background: rgba(30,64,175,0.15);
+    }
+
+    /* ── High contrast overrides ── */
+    [data-contrast="high"] {
+      --bg-app:        #000000 !important;
+      --bg-surface:    #0a0a0a !important;
+      --bg-input:      #111111 !important;
+      --bg-nav:        #000080 !important;
+      --text-primary:  #FFFFFF !important;
+      --text-secondary:#FFFF00 !important;
+      --text-muted:    #CCCCCC !important;
+      --border:        #FFFFFF !important;
+      --border-input:  #FFFFFF !important;
+      --brand:         #4488FF !important;
+      --brand-dark:    #2266DD !important;
+    }
+    [data-contrast="high"] body         { background: #000000 !important; color: #FFFFFF !important; }
+    [data-contrast="high"] .search-card { background: #000080 !important; border: 2px solid #FFFFFF !important; }
+    [data-contrast="high"] .search-input {
+      background: #000000 !important;
+      color: #FFFFFF !important;
+      border: 2px solid #FFFFFF !important;
+    }
+    [data-contrast="high"] .search-input::placeholder { color: #AAAAAA !important; }
+    [data-contrast="high"] .go-btn      { background: #0000CC !important; border: 2px solid #FFFFFF !important; }
+    [data-contrast="high"] .modal-box   { border: 2px solid #FFFFFF !important; }
+    [data-contrast="high"] .home-acc-dropdown { background: #0a0a0a !important; border-color: #FFFFFF !important; }
+    [data-contrast="high"] .home-acc-header   { background: #0a0a0a !important; border-color: #FFFFFF !important; color: #FFFFFF !important; }
+    [data-contrast="high"] .home-acc-arrow    { background: #0a0a0a !important; border-color: #FFFFFF !important; }
+
+    /* Mobile */
+    @media (max-width: 500px) {
+      .home-acc-dropdown { left: 8px; right: 8px; width: auto; }
+      .home-acc-arrow    { left: 44px; }
+    }
+
+    /* ── Logged-in state ── */
+    .home-user-label {
+      color: white;
+      font-size: 0.93rem;
+      font-weight: 600;
+      max-width: 100px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      opacity: 0.92;
+    }
+
+    .home-logout-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      border: none;
+      background: rgba(255,255,255,0.12);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.1s;
+      flex-shrink: 0;
+    }
+    .home-logout-btn:hover  { background: rgba(239,68,68,0.35); }
+    .home-logout-btn:active { transform: scale(0.93); }
+    .home-logout-btn svg    { width: 18px; height: 18px; }
+  </style>
+
+  <!-- Apply saved accessibility prefs BEFORE paint to prevent flash of wrong size/contrast -->
+  <script>
+    (function () {
+      var size     = localStorage.getItem('urbannav_textsize') || 'medium';
+      var contrast = localStorage.getItem('urbannav_contrast') === 'true';
+      var sizes    = { small: '12px', medium: '14px', large: '17px' };
+      document.documentElement.style.fontSize = sizes[size] || '14px';
+      if (contrast) document.documentElement.setAttribute('data-contrast', 'high');
+    })();
+  </script>
+</head>
+<body>
+
+  <!-- ── TOP NAV ── -->
+  <header class="top-nav">
+    <div class="nav-left">
+
+      <div class="nav-logo-circle">
+        <img src="logo.png" alt="UrbanNav logo" class="nav-logo-img"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <svg viewBox="0 0 48 48" fill="none" width="36" height="36" style="display:none">
+          <circle cx="24" cy="24" r="22" fill="#1E40AF"/>
+          <path d="M24 8C17.4 8 12 13.4 12 20c0 10.5 12 24 12 24s12-13.5 12-24c0-6.6-5.4-12-12-12z" fill="#60A5FA"/>
+          <circle cx="24" cy="20" r="4" fill="white"/>
+          <rect x="10" y="36" width="28" height="4" rx="2" fill="#93C5FD"/>
+        </svg>
+      </div>
+
+      <span class="nav-brand-name">UrbanNav</span>
+
+      <!-- Accessibility button — sits right next to the brand name -->
+      <button class="home-acc-btn" id="homeAccBtn"
+              aria-label="Accessibility options" title="Accessibility">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+             stroke-linecap="round" stroke-linejoin="round" width="18" height="18">
+          <circle cx="12" cy="4" r="1.5" fill="currentColor" stroke="none"/>
+          <path d="M9 9h6M12 9v7M9 16l-2 4M15 16l2 4"/>
+          <path d="M8 9c-1.5 0-3 .5-4 1.5M16 9c1.5 0 3 .5 4 1.5"/>
+        </svg>
+      </button>
+
+    </div>
+
+    <div class="nav-right">
+      <button class="night-btn" id="nightBtn" title="Toggle dark mode">
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <circle cx="12" cy="12" r="5"/>
+          <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+          <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+        </svg>
+      </button>
+      <button class="nav-login-btn" id="loginBtn">Log in</button>
+      <span id="homeUserLabel" class="home-user-label" style="display:none"></span>
+      <button id="homeLogoutBtn" class="home-logout-btn" style="display:none"
+              title="Log out" onclick="homeLogout()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+          <polyline points="16 17 21 12 16 7"/>
+          <line x1="21" y1="12" x2="9" y2="12"/>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- ── ACCESSIBILITY DROPDOWN PANEL ── -->
+  <div id="homeAccPanel" class="home-acc-dropdown" style="display:none"
+       role="dialog" aria-label="Accessibility options">
+    <div class="home-acc-arrow"></div>
+    <div class="home-acc-header">
+      <span>Accessibility</span>
+      <button class="home-acc-close" aria-label="Close"
+              onclick="document.getElementById('homeAccPanel').style.display='none'">&#x2715;</button>
+    </div>
+    <div class="home-acc-body">
+
+      <!-- Text Size -->
+      <p class="home-acc-section-title">Text Size</p>
+      <div class="home-acc-size-row">
+        <button class="home-acc-size-btn"                 id="homeSizeSmall"
+                onclick="accSetSize('small')"  aria-label="Small text">A</button>
+        <button class="home-acc-size-btn home-size-mid"   id="homeSizeMedium"
+                onclick="accSetSize('medium')" aria-label="Medium text">A</button>
+        <button class="home-acc-size-btn home-size-large" id="homeSizeLarge"
+                onclick="accSetSize('large')"  aria-label="Large text">A</button>
+      </div>
+      <div class="home-acc-size-labels">
+        <span>Small</span><span>Medium</span><span>Large</span>
+      </div>
+
+      <div class="home-acc-divider"></div>
+
+      <!-- High Contrast -->
+      <p class="home-acc-section-title">High Contrast</p>
+      <label class="home-acc-toggle-row">
+        <span class="home-acc-toggle-label">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M12 2a10 10 0 0 1 0 20V2z" fill="currentColor" stroke="none"/>
+          </svg>
+          High contrast mode
+        </span>
+        <div class="home-acc-switch" id="homeContrastSwitch"
+             role="switch" aria-checked="false" tabindex="0"
+             onclick="accToggleContrast()"
+             onkeydown="if(event.key==='Enter'||event.key===' ')accToggleContrast()">
+          <div class="home-acc-switch-thumb"></div>
+        </div>
+      </label>
+      <p class="home-acc-hint">Increases contrast for better readability</p>
+
+      <div class="home-acc-divider"></div>
+
+      <button class="home-acc-reset" onclick="accReset()">Reset to defaults</button>
+    </div>
+  </div>
+
+  <!-- ── MAIN CONTENT ── -->
+  <main class="page">
+    <h1 class="hero-title">Where are you going?</h1>
+
+    <div class="search-card">
+      <div class="inputs-wrapper">
+
+        <div class="labeled-input">
+          <span class="input-dot dot-green"></span>
+          <div class="input-col">
+            <p class="search-card-label">Start</p>
+            <input id="homeFrom" type="text" class="search-input"
+                   placeholder="Enter start location..." autocomplete="off">
+          </div>
+        </div>
+
+        <div class="input-connector-line"></div>
+
+        <div class="labeled-input">
+          <span class="input-dot dot-red"></span>
+          <div class="input-col">
+            <p class="search-card-label">End</p>
+            <input id="homeTo" type="text" class="search-input"
+                   placeholder="Enter destination..." autocomplete="off">
+          </div>
+        </div>
+
+      </div>
+
+      <div class="time-row">
+        <div class="time-label-group">
+          <span class="time-label">Time:</span>
+          <input type="time" id="homeTime" class="time-input">
+        </div>
+        <button class="go-btn" id="goBtn">GO</button>
+      </div>
+    </div>
+
+    <p class="home-error" id="homeError"></p>
+    <p class="tagline">Free to use &middot; No account needed to plan routes</p>
+  </main>
+
+  <!-- ── AUTH MODAL ── -->
+  <div id="authModal" class="modal-overlay" style="display:none"
+       onclick="if(event.target===this)closeModal()">
+    <div class="modal-box">
+      <button class="modal-close-btn" onclick="closeModal()">&#x2715;</button>
+
+      <div class="auth-tabs">
+        <button id="tabLogin"    class="auth-tab auth-tab-active" onclick="switchTab('login')">Log In</button>
+        <button id="tabRegister" class="auth-tab"                 onclick="switchTab('register')">Register</button>
+      </div>
+
+      <p id="authError" class="auth-error"></p>
+
+      <div id="loginForm">
+        <div class="auth-field">
+          <label>Email</label>
+          <input id="loginEmail" type="email" placeholder="you@example.com" class="auth-input">
+        </div>
+        <div class="auth-field">
+          <label>Password</label>
+          <input id="loginPassword" type="password" placeholder="password" class="auth-input">
+        </div>
+        <button class="auth-submit-btn" onclick="submitLogin()">Log In</button>
+        <p class="auth-switch">No account? <a href="#" onclick="switchTab('register')">Register here</a></p>
+      </div>
+
+      <div id="registerForm" style="display:none">
+        <div class="auth-field-row">
+          <div class="auth-field">
+            <label>First Name</label>
+            <input id="regFirst" type="text" placeholder="Jane" class="auth-input">
+          </div>
+          <div class="auth-field">
+            <label>Last Name</label>
+            <input id="regLast" type="text" placeholder="Smith" class="auth-input">
+          </div>
+        </div>
+        <div class="auth-field">
+          <label>Email</label>
+          <input id="regEmail" type="email" placeholder="you@example.com" class="auth-input">
+        </div>
+        <div class="auth-field">
+          <label>Password</label>
+          <input id="regPassword" type="password" placeholder="min 6 chars" class="auth-input">
+        </div>
+        <button class="auth-submit-btn" onclick="submitRegister()">Create Account</button>
+        <p class="auth-switch">Have an account? <a href="#" onclick="switchTab('login')">Log in</a></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SCRIPTS ── -->
+  <script src="config.js"></script>
+  <script src="home.js"></script>
+
+  <!-- ── ACCESSIBILITY + AUTH UI SCRIPT ── -->
+  <script>
+    /*
+      Shared localStorage keys (same as index.html / app.js):
+        urbannav_textsize  →  'small' | 'medium' | 'large'
+        urbannav_contrast  →  'true'  | 'false'
+    */
+
+    window.addEventListener('DOMContentLoaded', function () {
+      var size     = localStorage.getItem('urbannav_textsize') || 'medium';
+      var contrast = localStorage.getItem('urbannav_contrast') === 'true';
+      _accApplySize(size, false);
+      _accApplyContrast(contrast, false);
+      homeUpdateAuthUI();
+    });
+
+    // Panel toggle
+    document.getElementById('homeAccBtn').addEventListener('click', function (e) {
+      e.stopPropagation();
+      var panel = document.getElementById('homeAccPanel');
+      panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+    });
+
+    // Close when clicking outside
+    document.addEventListener('click', function (e) {
+      var panel = document.getElementById('homeAccPanel');
+      var btn   = document.getElementById('homeAccBtn');
+      if (panel && panel.style.display !== 'none'
+          && !panel.contains(e.target) && e.target !== btn) {
+        panel.style.display = 'none';
+      }
+    });
+
+    function accSetSize(size)    { _accApplySize(size, true); }
+    function accToggleContrast() {
+      _accApplyContrast(
+        document.documentElement.getAttribute('data-contrast') !== 'high',
+        true
+      );
+    }
+    function accReset() { _accApplySize('medium', true); _accApplyContrast(false, true); }
+
+    function _accApplySize(size, save) {
+      var sizes = { small: '12px', medium: '14px', large: '17px' };
+      document.documentElement.style.fontSize = sizes[size] || '14px';
+      document.documentElement.setAttribute('data-textsize', size);
+      ['small', 'medium', 'large'].forEach(function (s) {
+        var btn = document.getElementById('homeSize' + s.charAt(0).toUpperCase() + s.slice(1));
+        if (btn) btn.classList.toggle('home-acc-size-active', s === size);
+      });
+      if (save) localStorage.setItem('urbannav_textsize', size);
+    }
+
+    function _accApplyContrast(on, save) {
+      var html = document.documentElement;
+      var sw   = document.getElementById('homeContrastSwitch');
+      if (on) {
+        html.setAttribute('data-contrast', 'high');
+        if (sw) sw.setAttribute('aria-checked', 'true');
+      } else {
+        html.removeAttribute('data-contrast');
+        if (sw) sw.setAttribute('aria-checked', 'false');
+      }
+      if (save) localStorage.setItem('urbannav_contrast', on ? 'true' : 'false');
+    }
+
+    function homeUpdateAuthUI() {
+      var raw       = sessionStorage.getItem('urbannav_user');
+      var user      = raw ? JSON.parse(raw) : null;
+      var loginBtn  = document.getElementById('loginBtn');
+      var userLabel = document.getElementById('homeUserLabel');
+      var logoutBtn = document.getElementById('homeLogoutBtn');
+      if (!loginBtn) return;
+      if (user) {
+        loginBtn.style.display  = 'none';
+        userLabel.style.display = 'inline-block';
+        logoutBtn.style.display = 'inline-flex';
+        userLabel.textContent   = user.first_name;
+      } else {
+        loginBtn.style.display  = 'inline-block';
+        userLabel.style.display = 'none';
+        logoutBtn.style.display = 'none';
+      }
+    }
+
+    function homeLogout() {
+      sessionStorage.removeItem('urbannav_user');
+      homeUpdateAuthUI();
+    }
+  </script>
+
+</body>
+</html>
