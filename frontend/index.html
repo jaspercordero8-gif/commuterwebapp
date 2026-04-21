@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UrbanNav</title>
+  <link rel="stylesheet" href="style.css?v=3">
+  <script>
+    /* ── Breakpoint helper ── */
+    function isDesktop() { return window.innerWidth >= 769; }
+
+    /*
+      _onWeatherReady — called by app.js after weather data has loaded.
+      MOBILE (< 769px): show the "Show Weather" button, keep section hidden.
+      DESKTOP (>= 769px): show the section directly, button stays hidden via CSS.
+    */
+    window._onWeatherReady = function() {
+      window._weatherDataLoaded = true;
+      var btn = document.getElementById('mobileWeatherBtn');
+      var sec = document.getElementById('weatherSection');
+      if (isDesktop()) {
+        btn.style.display = 'none';
+        sec.style.display = 'block';
+      } else {
+        btn.style.display = 'flex';
+        sec.style.display = 'none';
+      }
+    };
+
+    /*
+      _onEcoReady — called by app.js after eco data has loaded.
+    */
+    window._onEcoReady = function() {
+      window._ecoDataLoaded = true;
+      var btn = document.getElementById('mobileEcoBtn');
+      var sec = document.getElementById('environmentSection');
+      if (isDesktop()) {
+        btn.style.display = 'none';
+        sec.style.display = 'block';
+      } else {
+        btn.style.display = 'flex';
+        sec.style.display = 'none';
+      }
+    };
+  </script>
+</head>
+<body>
+
+  <!-- ========== TOP NAV BAR ========== -->
+  <header class="top-nav">
+    <div class="top-nav-left">
+      <div class="nav-brand">
+        <div class="nav-logo-wrap">
+          <img src="logo.png" alt="UrbanNav" width="18" height="18" style="object-fit:contain"
+               onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+          <svg style="display:none" viewBox="0 0 24 24" fill="white" width="18" height="18">
+            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+          </svg>
+        </div>
+        <span class="nav-brand-name">URBANNAV</span>
+      </div>
+      <button id="accessibilityBtn" class="nav-icon-btn nav-acc-btn" aria-label="Accessibility options" title="Accessibility">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="4" r="1.5" fill="currentColor" stroke="none"/>
+          <path d="M9 9h6M12 9v7M9 16l-2 4M15 16l2 4"/>
+          <path d="M8 9c-1.5 0-3 .5-4 1.5M16 9c1.5 0 3 .5 4 1.5"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="top-nav-right">
+      <!-- User menu — shown when logged in, replaces plain username label -->
+      <div id="userMenuWrap" class="user-menu-wrap" style="display:none">
+        <button id="userMenuBtn" class="user-menu-btn" onclick="app.toggleUserMenu()" aria-haspopup="true" aria-expanded="false">
+          <span id="authUserLabel" class="nav-user-label"></span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+               stroke-linecap="round" width="12" height="12" class="user-menu-chevron">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </button>
+        <!-- Dropdown menu -->
+        <div id="userMenuDropdown" class="user-menu-dropdown" style="display:none">
+          <div class="user-menu-arrow"></div>
+          <button class="user-menu-item" onclick="app.openWellnessSheet(); app.closeUserMenu()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                 stroke-linecap="round" stroke-linejoin="round" width="15" height="15">
+              <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+            </svg>
+            Weekly Wellness
+          </button>
+          <div class="user-menu-divider"></div>
+          <button class="user-menu-item user-menu-logout" onclick="app.clearUser(); app.closeUserMenu()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                 stroke-linecap="round" width="15" height="15">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+              <polyline points="16 17 21 12 16 7"/>
+              <line x1="21" y1="12" x2="9" y2="12"/>
+            </svg>
+            Log out
+          </button>
+        </div>
+      </div>
+
+      <button id="authLoginBtn" class="nav-login-btn" onclick="app.openAuthModal('login')">Log in</button>
+
+      <!-- Delay notification bell -->
+      <div class="delay-bell-wrap" id="delayBellWrap" style="display:none">
+        <button class="nav-icon-btn delay-bell-btn" id="delayBellBtn"
+                onclick="app.toggleDelayPanel()"
+                aria-label="Delay notifications"
+                title="Service delays">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+          </svg>
+          <span class="delay-bell-badge" id="delayBellBadge" style="display:none">!</span>
+        </button>
+      </div>
+
+      <button id="favBtn" class="nav-icon-btn" aria-label="Saved routes" title="Saved Routes">
+        <img src="favroute.png" alt="Saved routes" width="20" height="20" style="object-fit:contain"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='inline'">
+        <svg style="display:none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+        </svg>
+        <span class="fav-badge" id="favCount" style="display:none">0</span>
+      </button>
+      <button id="nightModeBtn" class="nav-icon-btn night-toggle" aria-label="Toggle night mode">
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <circle cx="12" cy="12" r="5"/>
+          <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+          <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- ========== FAVOURITES DROPDOWN ========== -->
+  <div id="favPanel" class="fav-dropdown" style="display:none">
+    <div class="fav-dropdown-arrow"></div>
+    <div class="fav-panel-header">
+      <span>Saved Routes</span>
+      <button onclick="document.getElementById('favPanel').style.display='none'" class="fav-close-btn">&#x2715;</button>
+    </div>
+    <div id="favList" class="fav-list">
+      <p class="fav-empty">No saved routes yet.<br>Complete a route and tap the star to save it.</p>
+    </div>
+  </div>
+
+  <!-- ========== ACCESSIBILITY PANEL ========== -->
+  <div id="accessibilityPanel" class="accessibility-dropdown" style="display:none" role="dialog" aria-label="Accessibility options">
+    <div class="fav-dropdown-arrow acc-arrow"></div>
+    <div class="fav-panel-header">
+      <span>Accessibility</span>
+      <button onclick="document.getElementById('accessibilityPanel').style.display='none'" class="fav-close-btn" aria-label="Close accessibility panel">&#x2715;</button>
+    </div>
+    <div class="acc-panel-body">
+
+      <!-- Text Size -->
+      <div class="acc-section">
+        <p class="acc-section-title">Text Size</p>
+        <div class="acc-text-size-row">
+          <button class="acc-size-btn" id="accSizeSmall"  onclick="setTextSize('small')"  aria-label="Small text">A</button>
+          <button class="acc-size-btn acc-size-mid" id="accSizeMedium" onclick="setTextSize('medium')" aria-label="Medium text">A</button>
+          <button class="acc-size-btn acc-size-large" id="accSizeLarge"  onclick="setTextSize('large')"  aria-label="Large text">A</button>
+        </div>
+        <div class="acc-size-labels">
+          <span>Small</span><span>Medium</span><span>Large</span>
+        </div>
+      </div>
+
+      <!-- Divider -->
+      <div class="acc-divider"></div>
+
+      <!-- High Contrast -->
+      <div class="acc-section">
+        <p class="acc-section-title">High Contrast</p>
+        <label class="acc-toggle-row" for="highContrastToggle">
+          <span class="acc-toggle-label">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15">
+              <circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 1 0 20V2z" fill="currentColor" stroke="none"/>
+            </svg>
+            High contrast mode
+          </span>
+          <div class="acc-switch" id="highContrastSwitch" role="switch" aria-checked="false" tabindex="0"
+               onclick="toggleHighContrast()" onkeydown="if(event.key==='Enter'||event.key===' ')toggleHighContrast()">
+            <div class="acc-switch-thumb"></div>
+          </div>
+        </label>
+        <p class="acc-hint">Increases contrast for better readability</p>
+      </div>
+
+      <!-- Divider -->
+      <div class="acc-divider"></div>
+
+      <!-- Reset -->
+      <button class="acc-reset-btn" onclick="resetAccessibility()">Reset to defaults</button>
+    </div>
+  </div>
+
+  <!-- Hidden icon store for app.js -->
+  <div id="iconStore" style="display:none" aria-hidden="true">
+    <img id="icon-walking" src="walking-icon-0.png" width="28" height="28" style="object-fit:contain">
+    <img id="icon-cycling" src="bike.png"           width="28" height="28" style="object-fit:contain">
+    <img id="icon-driving" src="drive.png"          width="28" height="28" style="object-fit:contain">
+    <img id="icon-transit" src="bustrain.png"       width="28" height="28" style="object-fit:contain">
+    <img id="icon-eco"     src="eco.jpg"            width="20" height="20" style="object-fit:contain;vertical-align:middle">
+  </div>
+
+  <!-- ========== MAIN LAYOUT ========== -->
+  <div class="app-wrapper">
+
+    <!-- ===== SIDEBAR ===== -->
+    <div class="sidebar">
+      <div class="sidebar-content">
+
+        <!-- 1. PLAN YOUR ROUTE -->
+        <div class="section-card">
+          <p class="section-label">PLAN YOUR ROUTE</p>
+          <div class="form-stack">
+            <div class="route-input-row">
+              <div class="route-dots">
+                <div class="route-dot dot-green"></div>
+                <div class="route-line-connector"></div>
+                <div class="route-dot dot-red"></div>
+              </div>
+              <div class="route-inputs">
+                <input id="fromInput" type="text" placeholder="Start point" class="route-input route-input-top">
+                <div class="route-input-divider"></div>
+                <input id="toInput" type="text" placeholder="Destination" class="route-input route-input-bottom">
+              </div>
+            </div>
+            <div class="time-input-row">
+              <label class="time-input-label" for="departureTime">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="14" height="14">
+                  <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                </svg>
+                Departure time
+              </label>
+              <input type="time" id="departureTime" class="departure-time-input">
+              <button id="clearTimeBtn" class="clear-time-btn" style="display:none">Now</button>
+            </div>
+
+            <!-- ── FEATURE 3: Commuter Stress-Free Mode Toggle ── -->
+            <div class="stress-free-row" id="stressFreeRow">
+              <div class="stress-free-toggle-wrap">
+                <span class="stress-free-toggle-label">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="15" height="15">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M8 14s1.5 2 4 2 4-2 4-2"/>
+                    <line x1="9" y1="9" x2="9.01" y2="9" stroke-width="3"/>
+                    <line x1="15" y1="9" x2="15.01" y2="9" stroke-width="3"/>
+                  </svg>
+                  Commuter Stress-Free Mode
+                </span>
+                <button id="stressFreeBtn" class="stress-free-pill" onclick="app.toggleStressFreeMode()" aria-pressed="false">
+                  <span class="stress-free-pill-thumb"></span>
+                </button>
+              </div>
+              <p class="stress-free-hint" id="stressFreeHint" style="display:none">ON — finding your least stressful route...</p>
+            </div>
+
+            <button id="findRouteBtn" class="btn-primary">Find Route &rarr;</button>
+          </div>
+        </div>
+
+        <!-- 2. TRANSPORT MODE -->
+        <div id="transportModes" class="section-card" style="display:none">
+          <p class="section-label">TRANSPORT MODE</p>
+          <div class="mode-grid">
+            <button onclick="app.selectBestMode(this)" class="mode-btn mode-btn-best" id="bestModeBtn">
+              <span class="mode-icon best-mode-icon">
+                <svg viewBox="0 0 28 28" fill="none" width="28" height="28">
+                  <circle cx="14" cy="14" r="13" fill="url(#bestGrad)" />
+                  <defs>
+                    <linearGradient id="bestGrad" x1="0" y1="0" x2="28" y2="28" gradientUnits="userSpaceOnUse">
+                      <stop offset="0%" stop-color="#1E40AF"/>
+                      <stop offset="100%" stop-color="#06B6D4"/>
+                    </linearGradient>
+                  </defs>
+                  <path d="M14 7l1.8 3.6 4 .6-2.9 2.8.7 4-3.6-1.9-3.6 1.9.7-4L8.2 11.2l4-.6L14 7z" fill="white"/>
+                  <path d="M9 19h10M11 21.5h6" stroke="white" stroke-width="1.4" stroke-linecap="round"/>
+                </svg>
+              </span>
+              <span class="mode-label">Best</span>
+            </button>
+            <button onclick="app.selectMode('WALKING')" class="mode-btn">
+              <span class="mode-icon">
+                <img src="walking-icon-0.png" alt="Walk" width="28" height="28" style="object-fit:contain"
+                     onerror="this.style.display='none';this.nextElementSibling.style.display='inline'">
+                <span style="display:none;font-size:26px;line-height:1">&#x1F6B6;</span>
+              </span>
+              <span class="mode-label">Walk</span>
+            </button>
+            <button onclick="app.selectMode('BICYCLING')" class="mode-btn">
+              <span class="mode-icon">
+                <img src="bike.png" alt="Bike" width="28" height="28" style="object-fit:contain"
+                     onerror="this.style.display='none';this.nextElementSibling.style.display='inline'">
+                <span style="display:none;font-size:26px;line-height:1">&#x1F6B2;</span>
+              </span>
+              <span class="mode-label">Bike</span>
+            </button>
+            <button onclick="app.selectMode('DRIVING')" class="mode-btn">
+              <span class="mode-icon">
+                <img src="drive.png" alt="Drive" width="28" height="28" style="object-fit:contain"
+                     onerror="this.style.display='none';this.nextElementSibling.style.display='inline'">
+                <span style="display:none;font-size:26px;line-height:1">&#x1F697;</span>
+              </span>
+              <span class="mode-label">Drive</span>
+            </button>
+            <button onclick="app.selectMode('TRANSIT')" class="mode-btn">
+              <span class="mode-icon">
+                <img src="bustrain.png" alt="Transit" width="28" height="28" style="object-fit:contain"
+                     onerror="this.style.display='none';this.nextElementSibling.style.display='inline'">
+                <span style="display:none;font-size:26px;line-height:1">&#x1F687;</span>
+              </span>
+              <span class="mode-label">Transit</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- ══ MOBILE ONLY: Show Map button ══
+             Hidden on desktop via CSS (.mobile-show-map { display:none })
+             On mobile it shows, and clicking it reveals a 25vh inline map -->
+        <button id="mobileMapBtn" class="mobile-show-map" onclick="toggleMobileMap()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/>
+            <line x1="8" y1="2" x2="8" y2="18"/>
+            <line x1="16" y1="6" x2="16" y2="22"/>
+          </svg>
+          <span id="mobileMapBtnText">Show Map</span>
+        </button>
+
+        <!-- ══ MOBILE ONLY: Map slot — map element moves here ══ -->
+        <div id="mobileMapSlot" class="mobile-map-slot"></div>
+
+        <!-- 5. ROUTE DETAILS — shown by app.js after route found -->
+        <div id="routeDetails" class="section-card" style="display:none">
+          <div class="section-heading-between">
+            <p class="section-label" style="margin:0">ROUTE DETAILS</p>
+            <button id="saveRouteBtn" class="save-star-btn" title="Save route" onclick="app.saveRoute()">
+              <img src="favroute.png" alt="Save" width="18" height="18" style="object-fit:contain"
+                   onerror="this.style.display='none';this.nextElementSibling.style.display='inline'">
+              <svg style="display:none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+              </svg>
+            </button>
+          </div>
+          <div id="routeInfo"></div>
+        </div>
+
+        <!-- 6. TRANSPORT DEPARTURES — shown by app.js after route found -->
+        <div id="alertsSection" class="section-card" style="display:none">
+          <p class="section-label">TRANSPORT DEPARTURES</p>
+          <button onclick="app.loadLiveTransport()" class="btn-success">
+            <img src="transit.png" alt="" width="20" height="20" style="object-fit:contain;vertical-align:middle;margin-right:6px"
+                 onerror="this.style.display='none';this.nextElementSibling.style.display='inline'">
+            <span style="display:none;margin-right:4px">&#x1F68C;</span>
+            Load Live Departures
+          </button>
+          <div id="liveTransportInfo"></div>
+        </div>
+
+        <!-- ══ MOBILE ONLY: Show Weather button ══
+             Hidden with inline style="display:none"
+             app.js calls _onWeatherReady() after weather loads:
+               - desktop → shows #weatherSection directly
+               - mobile  → removes the display:none on this button -->
+        <button id="mobileWeatherBtn"
+                class="mobile-show-map mobile-toggle-btn"
+                onclick="toggleMobileSection('weather')"
+                style="display:none">
+          <span class="toggle-label-inner">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="16" height="16">
+              <path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/>
+            </svg>
+            Show Weather
+          </span>
+          <span class="toggle-arrow">&#9660;</span>
+        </button>
+
+        <!-- 8. WEATHER SECTION — shown directly on desktop, via button on mobile -->
+        <div id="weatherSection" class="section-card" style="display:none">
+          <p class="section-label">WEATHER</p>
+          <div id="weatherInfo"></div>
+        </div>
+
+        <!-- ══ MOBILE ONLY: Show Eco Impact button ══ -->
+        <button id="mobileEcoBtn"
+                class="mobile-show-map mobile-toggle-btn"
+                onclick="toggleMobileSection('eco')"
+                style="display:none">
+          <span class="toggle-label-inner">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="16" height="16">
+              <path d="M12 22V12M12 12C12 12 7 10 4 5c5 0 8 3 8 7zM12 12C12 12 17 10 20 5c-5 0-8 3-8 7z"/>
+            </svg>
+            Show Eco Impact
+          </span>
+          <span class="toggle-arrow">&#9660;</span>
+        </button>
+
+        <!-- 10. ECO SECTION — shown directly on desktop, via button on mobile -->
+        <div id="environmentSection" class="section-card" style="display:none">
+          <p class="section-label">
+            <img src="eco.jpg" alt="" width="18" height="18" style="object-fit:contain;vertical-align:middle;margin-right:5px"
+                 onerror="this.style.display='none';this.nextElementSibling.style.display='inline'">
+            <span style="display:none;margin-right:4px">&#x1F331;</span>
+            ECO IMPACT
+          </p>
+          <div id="environmentInfo"></div>
+        </div>
+
+      </div><!-- /sidebar-content -->
+
+    </div><!-- /sidebar -->
+
+    <!-- ===== MAP — right panel on desktop, hidden on mobile ===== -->
+    <div class="map-container" id="mapContainer">
+      <div id="map"></div>
+    </div>
+
+  </div><!-- /app-wrapper -->
+
+  <!-- ========== AUTH MODAL ========== -->
+  <div id="authModal" class="modal-overlay" style="display:none" onclick="if(event.target===this)app.closeAuthModal()">
+    <div class="modal-box">
+      <button class="modal-close-btn" onclick="app.closeAuthModal()">&#x2715;</button>
+      <div class="auth-tabs">
+        <button id="tabLogin"    class="auth-tab auth-tab-active" onclick="app.switchAuthTab('login')">Log In</button>
+        <button id="tabRegister" class="auth-tab"                 onclick="app.switchAuthTab('register')">Register</button>
+      </div>
+      <p id="authError" class="auth-error"></p>
+      <div id="authLoginForm">
+        <div class="auth-field">
+          <label>Email</label>
+          <input id="loginEmail" type="email" placeholder="you@example.com" class="auth-input">
+        </div>
+        <div class="auth-field">
+          <label>Password</label>
+          <input id="loginPassword" type="password" placeholder="••••••••" class="auth-input">
+        </div>
+        <button class="auth-submit-btn" onclick="app.submitLogin()">Log In</button>
+        <p class="auth-switch">Don't have an account? <a href="#" onclick="app.switchAuthTab('register')">Register here</a></p>
+      </div>
+      <div id="authRegisterForm" style="display:none">
+        <div class="auth-field-row">
+          <div class="auth-field"><label>First Name</label><input id="regFirstName" type="text" placeholder="Jane" class="auth-input"></div>
+          <div class="auth-field"><label>Last Name</label><input id="regLastName" type="text" placeholder="Smith" class="auth-input"></div>
+        </div>
+        <div class="auth-field">
+          <label>Email</label>
+          <input id="regEmail" type="email" placeholder="you@example.com" class="auth-input">
+        </div>
+        <div class="auth-field">
+          <label>Password <span style="color:var(--text-muted);font-weight:400">(min 6 chars)</span></label>
+          <input id="regPassword" type="password" placeholder="••••••••" class="auth-input">
+        </div>
+        <button class="auth-submit-btn" onclick="app.submitRegister()">Create Account</button>
+        <p class="auth-switch">Already have an account? <a href="#" onclick="app.switchAuthTab('login')">Log in</a></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== SCRIPTS ========== -->
+  <script src="config.js?v=3"></script>
+  <script>
+    const _mapsScript = document.createElement('script');
+    _mapsScript.src = `https://maps.googleapis.com/maps/api/js?key=${CONFIG.GOOGLE_MAPS_KEY}&libraries=places`;
+    _mapsScript.async = true; _mapsScript.defer = true;
+    document.head.appendChild(_mapsScript);
+  </script>
+  <script src="app.js?v=3"></script>
+
+  <script>
+    /* ── Night mode ── */
+    (function() {
+      var saved = localStorage.getItem('urbannav_theme');
+
+      if (saved) document.documentElement.setAttribute('data-theme', saved);
+      var btn = document.getElementById('nightModeBtn');
+      if (saved === 'dark') btn.classList.add('is-active');
+      btn.addEventListener('click', function() {
+        var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+        var next = isDark ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
+        localStorage.setItem('urbannav_theme', next);
+        btn.classList.toggle('is-active', !isDark);
+      });
+    })();
+
+    /* ── Favourites dropdown ── */
+    document.getElementById('favBtn').addEventListener('click', function(e) {
+      e.stopPropagation();
+      var panel = document.getElementById('favPanel');
+      var open  = panel.style.display !== 'none';
+      panel.style.display = open ? 'none' : 'block';
+      if (!open && window.app) app.loadFavouritesFromDB();
+    });
+    document.addEventListener('click', function(e) {
+      var panel  = document.getElementById('favPanel');
+      var favBtn = document.getElementById('favBtn');
+      if (panel.style.display !== 'none' && !panel.contains(e.target) && e.target !== favBtn)
+        panel.style.display = 'none';
+    });
+
+    /* ── Auto-fill from URL params ── */
+    (function() {
+      var p        = new URLSearchParams(window.location.search);
+      var fromVal  = p.get('from');
+      var toVal    = p.get('to');
+      var timeVal  = p.get('time');
+      var energyVal = p.get('energy') || 'normal';
+
+      // Store globally so app.js can read it
+      window._userEnergyLevel = energyVal;
+
+      // Low energy auto-enables stress-free mode
+      if (energyVal === 'low') {
+        localStorage.setItem('urbannav_stressfree', 'true');
+      }
+
+      function fill() {
+        if (fromVal) document.getElementById('fromInput').value = fromVal;
+        if (toVal)   document.getElementById('toInput').value   = toVal;
+        if (timeVal) {
+          document.getElementById('departureTime').value = timeVal;
+          document.getElementById('clearTimeBtn').style.display = 'inline-flex';
+        }
+      }
+      fill();
+      if (fromVal && toVal) {
+        var n = 0, t = setInterval(function() {
+          fill(); n++;
+          if (window.app && window.app.map) { clearInterval(t); fill(); window.app.findRoute(); }
+          if (n > 60) clearInterval(t);
+        }, 200);
+      }
+    })();
+  </script>
+
+  <script>
+    /* ── Show Map button: show on mobile only, hide on desktop ── */
+    function _updateMapBtnVisibility() {
+      var mapBtn = document.getElementById('mobileMapBtn');
+      if (!mapBtn) return;
+      mapBtn.style.display = isDesktop() ? 'none' : 'flex';
+    }
+    _updateMapBtnVisibility();
+
+    /* ══════════════════════════════════════════════════════════
+       MOBILE MAP TOGGLE
+       On desktop the .map-container is the right-hand panel (always
+       visible via CSS flex). On mobile it is hidden; this code
+       physically moves it into #mobileMapSlot and gives it 25vh.
+    ══════════════════════════════════════════════════════════ */
+    var _mobileMapOpen  = false;
+    var _mapInSlot      = false;
+
+    function toggleMobileMap() {
+      _mobileMapOpen = !_mobileMapOpen;
+
+      var mc   = document.getElementById('mapContainer');
+      var slot = document.getElementById('mobileMapSlot');
+      var btn  = document.getElementById('mobileMapBtn');
+      var txt  = document.getElementById('mobileMapBtnText');
+
+      /* Move map into the slot the first time */
+      if (!_mapInSlot) {
+        slot.appendChild(mc);
+        _mapInSlot = true;
+      }
+
+      if (_mobileMapOpen) {
+        /* Show: give the slot height so it's not collapsed */
+        slot.style.height  = '25vh';
+        mc.style.height    = '100%';
+        mc.style.display   = 'block';
+        txt.textContent    = 'Hide Map';
+        btn.classList.add('map-btn-active');
+
+        /* Tell Google Maps the container changed size */
+        setTimeout(function() {
+          if (window.google && window.app && window.app.map) {
+            google.maps.event.trigger(window.app.map, 'resize');
+            if (window.app.currentRoute && window.app.currentRoute.routes[0] && window.app.currentRoute.routes[0].bounds)
+              window.app.map.fitBounds(window.app.currentRoute.routes[0].bounds, {top:40,right:20,bottom:20,left:20});
+            else
+              window.app.map.setCenter(window.app.map.getCenter());
+          }
+        }, 350);
+      } else {
+        /* Hide */
+        slot.style.height = '0';
+        mc.style.height   = '0';
+        txt.textContent   = 'Show Map';
+        btn.classList.remove('map-btn-active');
+      }
+    }
+
+    /* ── Restore map to desktop panel when window grows ── */
+    var _resizeDebounce;
+    window.addEventListener('resize', function() {
+      clearTimeout(_resizeDebounce);
+      _resizeDebounce = setTimeout(function() {
+
+        if (isDesktop() && _mapInSlot) {
+          /* Put map back into .app-wrapper */
+          var mc   = document.getElementById('mapContainer');
+          var slot = document.getElementById('mobileMapSlot');
+          document.querySelector('.app-wrapper').appendChild(mc);
+          mc.style.height  = '';
+          mc.style.display = '';
+          slot.style.height = '0';
+          _mapInSlot     = false;
+          _mobileMapOpen = false;
+          document.getElementById('mobileMapBtnText').textContent = 'Show Map';
+          document.getElementById('mobileMapBtn').classList.remove('map-btn-active');
+          setTimeout(function() {
+            if (window.google && window.app && window.app.map) {
+              google.maps.event.trigger(window.app.map, 'resize');
+              /* Re-fit to route bounds so map zooms in correctly on desktop */
+              if (window.app.currentRoute && window.app.currentRoute.routes[0] && window.app.currentRoute.routes[0].bounds) {
+                window.app.map.fitBounds(window.app.currentRoute.routes[0].bounds, {top:60,right:40,bottom:40,left:40});
+              } else if (window.app.destinationLatLng) {
+                window.app.map.setCenter(window.app.destinationLatLng);
+                window.app.map.setZoom(13);
+              }
+            }
+          }, 80);
+        }
+
+        _updateMapBtnVisibility();
+
+        /* Re-apply correct weather/eco visibility for current breakpoint */
+        if (window._weatherDataLoaded) window._onWeatherReady();
+        if (window._ecoDataLoaded)     window._onEcoReady();
+
+        /* If section was manually opened on mobile, keep it open after _onWeatherReady hid it */
+        if (!isDesktop()) {
+          if (_weatherSectionOpen) document.getElementById('weatherSection').style.display = 'block';
+          if (_ecoSectionOpen)     document.getElementById('environmentSection').style.display = 'block';
+        }
+
+      }, 200);
+    });
+
+    /* ══════════════════════════════════════════════════════════
+       MOBILE WEATHER & ECO SECTION TOGGLES
+    ══════════════════════════════════════════════════════════ */
+    var _weatherSectionOpen = false;
+    var _ecoSectionOpen     = false;
+
+    function toggleMobileSection(which) {
+      if (which === 'weather') {
+        _weatherSectionOpen = !_weatherSectionOpen;
+        _applyMobileToggle('weatherSection', 'mobileWeatherBtn', _weatherSectionOpen);
+      } else {
+        _ecoSectionOpen = !_ecoSectionOpen;
+        _applyMobileToggle('environmentSection', 'mobileEcoBtn', _ecoSectionOpen);
+      }
+    }
+
+    function _applyMobileToggle(secId, btnId, open) {
+      var sec = document.getElementById(secId);
+      var btn = document.getElementById(btnId);
+      var lbl = btn.querySelector('.toggle-label-inner');
+      var arr = btn.querySelector('.toggle-arrow');
+
+      if (open) {
+        sec.style.display = 'block';
+        requestAnimationFrame(function() { sec.classList.add('mobile-sec-open'); });
+        btn.classList.add('toggle-open');
+        arr.style.transform = 'rotate(180deg)';
+        lbl.innerHTML = lbl.innerHTML.replace('Show', 'Hide');
+      } else {
+        sec.classList.remove('mobile-sec-open');
+        btn.classList.remove('toggle-open');
+        arr.style.transform = '';
+        lbl.innerHTML = lbl.innerHTML.replace('Hide', 'Show');
+        setTimeout(function() {
+          if (!sec.classList.contains('mobile-sec-open')) sec.style.display = 'none';
+        }, 300);
+      }
+    }
+
+    /* Reset everything on new Find Route search */
+    document.getElementById('findRouteBtn').addEventListener('click', function() {
+      _weatherSectionOpen    = false;
+      _ecoSectionOpen        = false;
+      window._weatherDataLoaded = false;
+      window._ecoDataLoaded     = false;
+
+      ['weatherSection','environmentSection'].forEach(function(id) {
+        var el = document.getElementById(id);
+        el.classList.remove('mobile-sec-open');
+        el.style.display = 'none';
+      });
+      ['mobileWeatherBtn','mobileEcoBtn'].forEach(function(id) {
+        var btn = document.getElementById(id);
+        btn.classList.remove('toggle-open');
+        btn.style.display = 'none';
+        var arr = btn.querySelector('.toggle-arrow');
+        if (arr) arr.style.transform = '';
+        var lbl = btn.querySelector('.toggle-label-inner');
+        if (lbl) lbl.innerHTML = lbl.innerHTML.replace('Hide','Show');
+      });
+    });
+  </script>
+
+  <script>
+    /* ══════════════════════════════════════════════════════════
+       ACCESSIBILITY — Text Size & High Contrast
+    ══════════════════════════════════════════════════════════ */
+    (function () {
+      // ── Apply saved preferences on load ──
+      var savedSize    = localStorage.getItem('urbannav_textsize')    || 'medium';
+      var savedContrast = localStorage.getItem('urbannav_contrast') === 'true';
+      applyTextSize(savedSize, false);
+      if (savedContrast) applyHighContrast(true, false);
+
+      // ── Panel toggle ──
+      document.getElementById('accessibilityBtn').addEventListener('click', function (e) {
+        e.stopPropagation();
+        var panel = document.getElementById('accessibilityPanel');
+        var open  = panel.style.display !== 'none';
+        // Close favourites if open
+        document.getElementById('favPanel').style.display = 'none';
+        panel.style.display = open ? 'none' : 'block';
+      });
+
+      document.addEventListener('click', function (e) {
+        var panel = document.getElementById('accessibilityPanel');
+        var btn   = document.getElementById('accessibilityBtn');
+        if (panel.style.display !== 'none' && !panel.contains(e.target) && e.target !== btn)
+          panel.style.display = 'none';
+      });
+    })();
+
+    /* ── Text size ── */
+    function setTextSize(size) {
+      applyTextSize(size, true);
+    }
+
+    function applyTextSize(size, save) {
+      var root = document.documentElement;
+      var sizes = { small: '12px', medium: '14px', large: '17px' };
+      root.style.fontSize = sizes[size] || '14px';
+      root.setAttribute('data-textsize', size);
+      // Update button active states
+      ['small','medium','large'].forEach(function(s) {
+        var btn = document.getElementById('accSize' + s.charAt(0).toUpperCase() + s.slice(1));
+        if (btn) btn.classList.toggle('acc-size-active', s === size);
+      });
+      if (save) localStorage.setItem('urbannav_textsize', size);
+    }
+
+    /* ── High contrast ── */
+    function toggleHighContrast() {
+      var isOn = document.documentElement.getAttribute('data-contrast') === 'high';
+      applyHighContrast(!isOn, true);
+    }
+
+    function applyHighContrast(on, save) {
+      var html   = document.documentElement;
+      var sw     = document.getElementById('highContrastSwitch');
+      if (on) {
+        html.setAttribute('data-contrast', 'high');
+        if (sw) sw.setAttribute('aria-checked', 'true');
+      } else {
+        html.removeAttribute('data-contrast');
+        if (sw) sw.setAttribute('aria-checked', 'false');
+      }
+      if (save) localStorage.setItem('urbannav_contrast', on ? 'true' : 'false');
+    }
+
+    /* ── Reset all accessibility settings ── */
+    function resetAccessibility() {
+      applyTextSize('medium', true);
+      applyHighContrast(false, true);
+    }
+  </script>
+  <!-- ── FEATURE 3: Commuter Stress-Free Mode — restore saved state on load ── -->
+  <script>
+    (function() {
+      var saved = localStorage.getItem('urbannav_stressfree') === 'true';
+      var t = setInterval(function() {
+        if (window.app) {
+          clearInterval(t);
+          app.preferEasyRoute = saved;
+          app._applyStressFreeUI(saved);
+        }
+      }, 100);
+    })();
+
+    // Close wellness sheet with Escape key
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && window.app) app.closeWellnessSheet();
+    });
+
+    // Swipe down on the sheet to close it (mobile gesture)
+    (function() {
+      var startY = 0;
+      var sheet  = null;
+      document.addEventListener('touchstart', function(e) {
+        sheet = document.getElementById('wellnessSheet');
+        if (sheet && sheet.classList.contains('open')) {
+          startY = e.touches[0].clientY;
+        }
+      }, { passive: true });
+      document.addEventListener('touchend', function(e) {
+        if (!sheet || !sheet.classList.contains('open')) return;
+        var endY = e.changedTouches[0].clientY;
+        if (endY - startY > 80) { // swiped down more than 80px
+          if (window.app) app.closeWellnessSheet();
+        }
+      }, { passive: true });
+    })();
+  </script>
+  <!-- ========== WEEKLY WELLNESS BOTTOM SHEET ========== -->
+  <!-- Backdrop — clicking it closes the sheet -->
+  <div id="wellnessBackdrop" class="wellness-backdrop" onclick="app.closeWellnessSheet()"></div>
+
+  <div id="wellnessSheet" class="wellness-sheet" role="dialog" aria-label="Weekly Commute Wellness">
+
+    <!-- Drag handle — visual affordance for mobile -->
+    <div class="wellness-drag-handle"></div>
+
+    <!-- Sheet header -->
+    <div class="wellness-sheet-header">
+      <div class="wellness-sheet-title-group">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+             stroke-linecap="round" stroke-linejoin="round" width="18" height="18">
+          <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+        </svg>
+        <div>
+          <h2 class="wellness-sheet-title">Weekly Commute Wellness</h2>
+          <p class="wellness-sheet-week" id="wellnessSheetWeek"></p>
+        </div>
+      </div>
+      <div class="wellness-sheet-actions">
+        <button class="wellness-reset-btn" onclick="app.resetWellness()" title="Reset this week">
+          Reset week
+        </button>
+        <button class="wellness-close-btn" onclick="app.closeWellnessSheet()" aria-label="Close">
+          &#x2715;
+        </button>
+      </div>
+    </div>
+
+    <!-- Stats grid -->
+    <div class="wellness-sheet-body">
+      <div class="wellness-grid" id="wellnessGrid">
+        <!-- Populated by app.renderWellnessCard() -->
+      </div>
+      <p class="wellness-footer">Stats update automatically each time you view a route this week.</p>
+    </div>
+
+  </div>
+
+  <!-- ========== DELAY NOTIFICATION PANEL ========== -->
+  <div id="delayPanel" class="delay-panel" style="display:none" role="dialog" aria-label="Service delay notifications">
+    <div class="delay-panel-header">
+      <div class="delay-panel-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" style="color:#dc2626">
+          <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+          <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+        </svg>
+        Service Delays
+      </div>
+      <button class="delay-panel-close" onclick="app.toggleDelayPanel()" aria-label="Close">&#x2715;</button>
+    </div>
+    <div id="delayPanelContent" class="delay-panel-content">
+      <p class="delay-panel-empty">No delays detected on your route.</p>
+    </div>
+  </div>
+  <!-- Backdrop -->
+  <div id="delayPanelBackdrop" class="delay-panel-backdrop" onclick="app.toggleDelayPanel()" style="display:none"></div>
+
+</body>
+</html>
