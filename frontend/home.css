@@ -1,8 +1,3 @@
-/* ============================================================
-   home.css — Styles for UrbanNav homepage (home.html)
-   ============================================================ */
-
-/* CSS Variables — Light & Dark themes */
 :root {
   --brand:        #1E40AF;
   --brand-dark:   #1e3a8a;
@@ -35,8 +30,7 @@
 /* Reset */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-/* html font-size is set via JS (accessibility text scaling).
-   All rem values below scale automatically with it. */
+
 html {
   font-size: 14px;
   transition: font-size 0.2s ease;
@@ -52,7 +46,7 @@ html, body {
 button { cursor: pointer; font-family: var(--font); }
 input  { font-family: var(--font); }
 
-/* ── TOP NAV ── */
+
 .top-nav {
   position: fixed;
   top: 0; left: 0; right: 0;
@@ -95,7 +89,7 @@ input  { font-family: var(--font); }
 }
 
 .nav-brand-name {
-  font-size: 1.57rem;    /* ~22px at base 14px */
+  font-size: 1.57rem;    
   font-weight: 800;
   color: white;
   letter-spacing: 1px;
@@ -141,7 +135,7 @@ input  { font-family: var(--font); }
 }
 .nav-login-btn:hover { background: rgba(255,255,255,0.28); }
 
-/* ── MAIN PAGE ── */
+/* MAIN PAGE */
 .page {
   min-height: 100vh;
   padding: var(--nav-h) 20px 40px;
@@ -151,10 +145,10 @@ input  { font-family: var(--font); }
   justify-content: center;
 }
 
-/* Hero title — Poppins gradient */
+/* Hero title  Poppins gradient */
 .hero-title {
   font-family: "Poppins", var(--font);
-  font-size: clamp(2.29rem, 6vw, 4.14rem);   /* clamp(32px, 6vw, 58px) */
+  font-size: clamp(2.29rem, 6vw, 4.14rem);  
   font-weight: 900;
   margin-bottom: 32px;
   text-align: center;
@@ -172,7 +166,7 @@ input  { font-family: var(--font); }
   background-clip: text;
 }
 
-/* ── SEARCH CARD ── */
+
 .search-card {
   background: var(--brand);
   border-radius: 24px;
@@ -183,7 +177,7 @@ input  { font-family: var(--font); }
 }
 
 .search-card-label {
-  font-size: 0.93rem;    /* ~13px */
+  font-size: 0.93rem;    
   font-weight: 700;
   color: rgba(255,255,255,0.75);
   text-transform: uppercase;
@@ -237,7 +231,7 @@ input  { font-family: var(--font); }
   padding: 15px 18px;
   border: none;
   border-radius: 12px;
-  font-size: 1.07rem;    /* ~15px */
+  font-size: 1.07rem;   
   font-weight: 500;
   background: white;
   color: #0D1117;
@@ -263,7 +257,7 @@ input  { font-family: var(--font); }
 }
 
 .time-label {
-  font-size: 1.07rem;    /* ~15px */
+  font-size: 1.07rem;   
   font-weight: 700;
   color: white;
   text-transform: uppercase;
@@ -274,7 +268,7 @@ input  { font-family: var(--font); }
   padding: 8px 14px;
   border: none;
   border-radius: 8px;
-  font-size: 1rem;       /* ~14px */
+  font-size: 1rem;      
   font-weight: 500;
   background: rgba(255,255,255,0.2);
   color: white;
@@ -290,7 +284,7 @@ input  { font-family: var(--font); }
   border: none;
   border-radius: 50px;
   padding: 14px 44px;
-  font-size: 1.14rem;    /* ~16px */
+  font-size: 1.14rem;    
   font-weight: 800;
   letter-spacing: 1px;
   text-transform: uppercase;
@@ -304,7 +298,7 @@ input  { font-family: var(--font); }
 /* Error + tagline */
 .home-error {
   margin-top: 14px;
-  font-size: 0.93rem;    /* ~13px */
+  font-size: 0.93rem;    
   font-weight: 600;
   color: #EF4444;
   min-height: 18px;
@@ -314,12 +308,11 @@ input  { font-family: var(--font); }
 
 .tagline {
   margin-top: 14px;
-  font-size: 0.93rem;    /* ~13px */
+  font-size: 0.93rem;    
   color: var(--text-muted);
   text-align: center;
 }
 
-/* ── AUTH MODAL ── */
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -375,7 +368,7 @@ input  { font-family: var(--font); }
   border: none;
   border-radius: 8px;
   background: transparent;
-  font-size: 0.93rem;    /* ~13px */
+  font-size: 0.93rem;   
   font-weight: 600;
   color: var(--text-muted);
   cursor: pointer;
@@ -389,7 +382,7 @@ input  { font-family: var(--font); }
 }
 
 .auth-error {
-  font-size: 0.86rem;    /* ~12px */
+  font-size: 0.86rem;   
   color: #DC2626;
   background: #FEF2F2;
   border: 1px solid #FECACA;
@@ -407,7 +400,7 @@ input  { font-family: var(--font); }
 .auth-field { margin-bottom: 14px; }
 .auth-field label {
   display: block;
-  font-size: 0.86rem;    /* ~12px */
+  font-size: 0.86rem;   
   font-weight: 600;
   color: var(--text-secondary);
   margin-bottom: 5px;
@@ -424,7 +417,7 @@ input  { font-family: var(--font); }
   padding: 10px 12px;
   border: 1.5px solid var(--border-input);
   border-radius: 9px;
-  font-size: 0.93rem;    /* ~13px */
+  font-size: 0.93rem;  
   background: var(--bg-input);
   color: var(--text-primary);
   outline: none;
@@ -440,7 +433,7 @@ input  { font-family: var(--font); }
   border: none;
   border-radius: 10px;
   padding: 11px 0;
-  font-size: 1rem;       /* ~14px */
+  font-size: 1rem;     
   font-weight: 700;
   cursor: pointer;
   margin-top: 4px;
@@ -452,7 +445,7 @@ input  { font-family: var(--font); }
 .auth-switch { text-align: center; font-size: 0.86rem; color: var(--text-muted); }
 .auth-switch a { color: var(--brand); font-weight: 600; text-decoration: none; }
 
-/* ── RESPONSIVE ── */
+
 @media (max-width: 500px) {
   .search-card { padding: 20px 16px 18px; }
   .time-row    { flex-direction: column; align-items: stretch; }
@@ -460,11 +453,6 @@ input  { font-family: var(--font); }
 }
 
 
-/* ============================================================
-   ACCESSIBILITY — Button, Dropdown Panel, High Contrast
-   ============================================================ */
-
-/* Accessibility button in .nav-left */
 .home-acc-btn {
   width: 36px;
   height: 36px;
@@ -478,13 +466,13 @@ input  { font-family: var(--font); }
   cursor: pointer;
   flex-shrink: 0;
   transition: background var(--trans), transform 0.1s;
-  /* Slight left spacing to separate from brand name */
+ 
   margin-left: 2px;
 }
 .home-acc-btn:hover  { background: rgba(255,255,255,0.28); }
 .home-acc-btn:active { transform: scale(0.92); }
 
-/* Dropdown panel — opens from left, aligned with button */
+/* Dropdown panel opens from left, aligned with button */
 .home-acc-dropdown {
   position: fixed;
   top: calc(var(--nav-h) + 6px);
@@ -572,8 +560,7 @@ input  { font-family: var(--font); }
   cursor: pointer;
   transition: all var(--trans);
   line-height: 1;
-  /* Fixed px so the preview A's always show different visual sizes
-     regardless of the current text-scale setting */
+ 
   font-size: 13px;
 }
 .home-acc-size-btn.home-size-mid   { font-size: 16px; }
@@ -680,7 +667,7 @@ input  { font-family: var(--font); }
   color: #93C5FD;
 }
 
-/* ── HIGH CONTRAST MODE ── */
+/* HIGH CONTRAST MODE */
 [data-contrast="high"] {
   --bg-app:        #000000;
   --bg-surface:    #0a0a0a;

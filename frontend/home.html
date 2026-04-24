@@ -10,7 +10,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;800;900&display=swap" rel="stylesheet">
 
   <style>
-    /* ALL CSS EMBEDDED — no external stylesheet needed */
     :root {
       --brand: #1E40AF; --brand-dark: #1e3a8a;
       --bg-app: #F2F3F5; --bg-surface: #FFFFFF; --bg-input: #F7F8FA; --bg-nav: #1E40AF;
@@ -130,11 +129,7 @@
     .go-btn:hover  { background: #172554; }
     .go-btn:active { transform: scale(0.97); }
 
-    /* ═══════════════════════════════════════════════
-       FEATURE 1: ENERGY LEVEL
-       Sits between location inputs and time/GO row.
-       Two plain <button> elements — works Chrome + Safari.
-    ═══════════════════════════════════════════════ */
+   
     .energy-row {
       margin: 16px 0 0;
       padding: 14px 0 14px;
@@ -142,7 +137,7 @@
       border-bottom: 1px solid rgba(255,255,255,0.2);
     }
 
-    /* "What's your energy today?" label above the buttons */
+    /* Energy options below time selectors */
     .energy-section-label {
       font-size: 11px;
       font-weight: 700;
@@ -182,7 +177,7 @@
       color: #1E40AF;
     }
 
-    /* Icon area — 32x32 container for your image */
+    /* Icon container on the left of each energy option */
     .energy-opt-icon {
       width: 32px;
       height: 32px;
@@ -413,13 +408,13 @@
         </div>
       </div>
 
-      <!-- 2. FEATURE 1: Energy Level — between location inputs and time/GO -->
+      <!--  Energy Level between location inputs and time/GO -->
       <div class="energy-row">
         <p class="energy-section-label">What's your energy today?</p>
         <input type="hidden" id="energyLevel" value="normal">
         <div class="energy-options">
 
-          <!-- Normal button — replace normal-icon.png with your own image -->
+         
           <button type="button" class="energy-opt energy-active" id="energyNormal"
                   onclick="setEnergyLevel('normal')">
             <span class="energy-opt-icon">
@@ -433,7 +428,7 @@
             </span>
           </button>
 
-          <!-- Low Energy button — replace low-icon.png with your own image -->
+         <!-- enerygy level-->
           <button type="button" class="energy-opt" id="energyLow"
                   onclick="setEnergyLevel('low')">
             <span class="energy-opt-icon">
@@ -450,7 +445,7 @@
         </div>
       </div>
 
-      <!-- 3. Time + GO -->
+      <!-- Time + GO -->
       <div class="time-row">
         <div class="time-label-group">
           <span class="time-label">Time:</span>
@@ -494,16 +489,12 @@
     </div>
   </div>
 
-  <!-- SCRIPTS -->
+
   <script src="config.js"></script>
   <script src="home.js"></script>
 
   <script>
-    /* ── FEATURE 1: Energy Level ──
-       setEnergyLevel() updates button states and the hidden input.
-       It also links to Feature 3 (Stress-Free Mode):
-       selecting "Low Energy" pre-enables Commuter Stress-Free Mode
-       so index.html picks it up immediately from localStorage. */
+// Energy level selection logic
     function setEnergyLevel(val) {
       document.getElementById('energyLevel').value = val;
       document.getElementById('energyNormal').classList.toggle('energy-active', val === 'normal');
@@ -512,7 +503,7 @@
       localStorage.setItem('urbannav_stressfree', val === 'low' ? 'true' : 'false');
     }
 
-    /* ── Dark mode ── */
+    /* Dark mode*/
     var _html  = document.documentElement;
     var _saved = localStorage.getItem('urbannav_theme');
     if (_saved) _html.setAttribute('data-theme', _saved);
@@ -522,7 +513,7 @@
       localStorage.setItem('urbannav_theme', next);
     });
 
-    /* ── Auth modal ── */
+    /* Auth modal */
     document.getElementById('loginBtn').addEventListener('click', function() {
       var u = sessionStorage.getItem('urbannav_user');
       if (u) { window.location.href = 'index.html'; }
@@ -540,7 +531,7 @@
       document.getElementById('authError').textContent = '';
     }
 
-    /* ── Accessibility panel ── */
+    /* Accessibility panel*/
     document.getElementById('homeAccBtn').addEventListener('click', function(e) {
       e.stopPropagation();
       var panel = document.getElementById('homeAccPanel');
@@ -572,7 +563,7 @@
       if (save) localStorage.setItem('urbannav_contrast', on ? 'true' : 'false');
     }
 
-    /* ── Auth UI ── */
+    /*Auth UI */
     function homeUpdateAuthUI() {
       var raw      = sessionStorage.getItem('urbannav_user');
       var user     = raw ? JSON.parse(raw) : null;
@@ -585,7 +576,7 @@
     }
     function homeLogout() { sessionStorage.removeItem('urbannav_user'); homeUpdateAuthUI(); }
 
-    /* ── On DOM ready ── */
+    /* On DOM ready */
     window.addEventListener('DOMContentLoaded', function() {
       // Restore energy selection from localStorage
       var sfOn = localStorage.getItem('urbannav_stressfree') === 'true';
@@ -596,7 +587,7 @@
       homeUpdateAuthUI();
     });
 
-    /* ── Auth submit functions (used by modal buttons) ── */
+    /* Auth submit functions (used by modal buttons)  */
     async function submitLogin() {
       var email = document.getElementById('loginEmail').value.trim();
       var pass  = document.getElementById('loginPassword').value;
