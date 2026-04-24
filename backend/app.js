@@ -1,7 +1,4 @@
-
-
 //handles map, routing, weather, and live transport data
-
 class UrbanNavApp {
   constructor() {
     this.map = null;
@@ -120,7 +117,7 @@ class UrbanNavApp {
     }
   }
 
-  // ─── SELECT MODE (Walk / Bike / Drive / Transit) ─────────────
+  //  SELECT MODE (Walk / Bike / Drive / Transit) 
   async selectMode(mode) {
     this.selectedMode = mode;
 
@@ -178,7 +175,7 @@ class UrbanNavApp {
     }
   }
 
-  // ─── DISPLAY ROUTE DETAILS (Walk / Bike / Drive / Transit) ───
+  // Displays the selected route with details, and also shows alternative routes as thin grey lines if available
   displayRouteDetails(result, mode, routeIndex = 0) {
     const leg = result.routes[routeIndex].legs[0];
     const icons = {
@@ -188,9 +185,7 @@ class UrbanNavApp {
       TRANSIT:   document.getElementById('icon-transit').outerHTML
     };
 
-    // Route badges (Fastest / Least Disrupted) — hidden when stress-free is ON
-    // because stress-free picks a different route intentionally, so those
-    // labels would be misleading.
+  // Badges for route features like tolls, ferries, highways
     const badges = this.preferEasyRoute
       ? ''
       : this._getRouteBadges(result.routes, routeIndex);
@@ -199,7 +194,7 @@ class UrbanNavApp {
     const relHTML     = this._buildReliabilityHTML(relScore, mode, leg);
     const fatigueHTML = this._buildFatigueWarningHTML(leg, mode);
 
-    // Stress-Free Mode banner — single clean message, no duplicates
+    // Stress-Free Mode banner 
     const stressFreeHTML = this.preferEasyRoute
       ? `<div class="stress-free-banner">Commuter Stress-Free Mode ON — easier route selected</div>`
       : '';
@@ -245,7 +240,7 @@ class UrbanNavApp {
       </div>`;
   }
 
-  // ─── ECO IMPACT ──────────────────────────────────────────────
+  //  ECO IMPACT
   displayEnvironmentalImpact(result, mode) {
     const leg          = result.routes[0].legs[0];
     const distance     = leg.distance.value / 1000;
@@ -290,7 +285,7 @@ class UrbanNavApp {
       ${calorieHTML}`;
   }
 
-  // ─── WEATHER ─────────────────────────────────────────────────
+  // WEATHER
   async loadWeather() {
     if (!this.destinationLatLng) return;
     this.showLoading('weatherInfo', 'Loading weather...');
@@ -307,7 +302,7 @@ class UrbanNavApp {
         humidity:    data.main.humidity,
         description: data.weather[0].description,
         main:        data.weather[0].main,
-        windSpeed:   data.wind ? Math.round(data.wind.speed * 3.6) : null, // m/s → km/h
+        windSpeed:   data.wind ? Math.round(data.wind.speed * 3.6) : null, 
         rain:        data.rain ? data.rain['1h'] || data.rain['3h'] || 0 : 0
       };
 
@@ -345,7 +340,7 @@ class UrbanNavApp {
     }
   }
 
-  // ─── TRANSPORT DEPARTURES ────────────────────────────────────
+  //TRANSPORT DEPARTURES 
   async loadLiveTransport() {
     if (!this.destinationLatLng) {
       this.showError('liveTransportInfo', 'Please select a destination first');
@@ -400,7 +395,7 @@ class UrbanNavApp {
     return timeStr;
   }
 
-  async loadTrainDepartures(lat, lon, chosenTime = '') {
+  async loadTrainDepartures(lat, lon, chosenTime = '') { //added chosenTime parameter to pass user-selected departure time
     try {
       const stationsUrl = `https://transportapi.com/v3/uk/places.json?lat=${lat}&lon=${lon}&type=train_station&app_id=${CONFIG.TRANSPORT_APP_ID}&app_key=${CONFIG.TRANSPORT_APP_KEY}`;
       const stationsData = await (await fetch(stationsUrl)).json();
@@ -581,7 +576,7 @@ class UrbanNavApp {
     }
   }
 
-  // ─── AUTH ────────────────────────────────────────────────────
+  //  USER AUTH & FAVOURITES
   getUser() {
     const raw = sessionStorage.getItem('urbannav_user');
     return raw ? JSON.parse(raw) : null;
@@ -647,7 +642,7 @@ class UrbanNavApp {
     if (wrap && !wrap.contains(e.target)) this.closeUserMenu();
   };
 
-  // ─── SAVE ROUTE ──────────────────────────────────────────────
+  // Saves the current route to user's favourites in the database
   async saveRoute() {
     if (!this.currentRoute || !this.selectedMode) return;
     const user = this.getUser();
@@ -769,7 +764,7 @@ class UrbanNavApp {
     this.findRoute();
   }
 
-  // ─── AUTH MODAL ──────────────────────────────────────────────
+  // Opens the authentication modal with the specified tab active
   openAuthModal(tab = 'login') {
     document.getElementById('authModal').style.display = 'flex';
     this.switchAuthTab(tab);
@@ -834,7 +829,7 @@ class UrbanNavApp {
     } catch { errEl.textContent = 'Cannot reach server — are you on http://localhost:8888 ?'; }
   }
 
-  // ─── DEPARTURE TIME HELPERS ──────────────────────────────────
+  // ─── DEPARTURE TIME HANDLING ─────────────────────────────────
   _getDepartureDate() {
     const timeInput = document.getElementById('departureTime');
     const val = timeInput ? timeInput.value.trim() : '';
@@ -887,14 +882,14 @@ class UrbanNavApp {
     element.style.display = (element.style.display === 'none' || !element.style.display) ? 'block' : 'none';
   }
 
-  // ─── INIT FAVOURITES ─────────────────────────────────────────
+  // ─── INITIALIZATION ─────────────────────────────────────────
   initFavouritesOnLoad() {
     this.updateAuthUI();
     this.loadFavouritesFromDB();
     this.renderWellnessCard();
   }
 
-  // ─── AUTO-REFRESH ON TIME CHANGE ─────────────────────────────
+  //auto-calculate route when departure time changes, with debounce to avoid excessive calls
   _onDepartureTimeChange() {
     const from = document.getElementById('fromInput').value.trim();
     const to   = document.getElementById('toInput').value.trim();
@@ -910,7 +905,7 @@ class UrbanNavApp {
     }, 400);
   }
 
-  // ─── ROUTE CALCULATION ───────────────────────────────────────
+  // Route selection logic for badges and "stress-free" mode
   _getFastestRouteIndex(routes) {
     let bestIdx = 0, bestSecs = Infinity;
     routes.forEach((route, i) => {
@@ -937,9 +932,7 @@ class UrbanNavApp {
     return scores.indexOf(Math.min(...scores));
   }
 
-  // Route badges — only shown when stress-free is OFF.
-  // When stress-free is ON the selected route is intentionally different
-  // from the "fastest", so those labels would be incorrect.
+ // Simple heuristic for "stress-free" route: fewest steps + prefers walking over transit
   _getRouteBadges(routes, selectedIndex) {
     if (this.preferEasyRoute) return '';
     const fastestIdx   = this._getFastestRouteIndex(routes);
@@ -987,8 +980,8 @@ class UrbanNavApp {
     return `<img src="https://openweathermap.org/img/wn/${iconCode}@2x.png" width="64" height="64" alt="${condition}">`;
   }
 
-  // ─── BEST (MULTIMODAL) MODE ──────────────────────────────────
-  async selectBestMode(btnEl) {
+  // Multimodal route selection with "stress-free" preference and caching of train platform data for delay insights
+  async selectBestMode(btnEl) {  
     this.selectedMode = 'TRANSIT';
     document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
     if (btnEl) btnEl.classList.add('active');
@@ -1032,7 +1025,7 @@ class UrbanNavApp {
     }
   }
 
-  // ─── DISPLAY BEST ROUTE ──────────────────────────────────────
+  // display best route with option cards for alternatives, reliability scores, and fatigue warnings
   displayBestRoute(result) {
     const routes    = result.routes;
     const totalDur  = routes[0].legs.reduce((s, l) => s + l.duration.value, 0);
@@ -1102,7 +1095,7 @@ class UrbanNavApp {
     const relHTML  = this._buildReliabilityHTML(relScore, 'TRANSIT', bestLeg);
     const fatHTML  = this._buildFatigueWarningHTML(bestLeg, 'TRANSIT');
 
-    // Stress-free banner only — no duplicate badges
+    // Stress-free banner only if the user has that preference enabled, to avoid confusion when badges are hidden
     const stressFreeHTML = this.preferEasyRoute
       ? `<div class="stress-free-banner">Commuter Stress-Free Mode ON — ranked by fewest transfers, least walking, then time</div>`
       : '';
@@ -1197,7 +1190,7 @@ class UrbanNavApp {
     }).join('');
   }
 
-  // ─── PLATFORM CACHE ──────────────────────────────────────────
+ // Caches nearby train platforms and their departure times to provide insights on potential delays or platform changes
   async _primeTrainPlatformCache(chosenTime = '') {
     try {
       let lat, lon;
@@ -1237,7 +1230,7 @@ class UrbanNavApp {
     return best;
   }
 
-  // ─── JOURNEY TIMELINE ────────────────────────────────────────
+ // Builds a visual timeline of the journey with segments for walking and transit, including times, stops, and platform info
   _buildJourneyTimeline(leg) {
     const depTime = leg.departure_time ? leg.departure_time.text : '';
     const arrTime = leg.arrival_time   ? leg.arrival_time.text   : '';
@@ -1356,7 +1349,7 @@ class UrbanNavApp {
     return html;
   }
 
-  // ─── STRESS-FREE MODE ────────────────────────────────────────
+  // "Stress-free mode" toggle: when enabled, the app will prioritize routes with fewer transfers and less walking, even if they take slightly longer
   toggleStressFreeMode() {
     const isOn = localStorage.getItem('urbannav_stressfree') === 'true';
     const next = !isOn;
@@ -1402,7 +1395,7 @@ class UrbanNavApp {
     return scored[0].idx;
   }
 
-  // ─── RELIABILITY SCORE ───────────────────────────────────────
+  //reliability score based on mode, duration, walking time, and live traffic/transit delay data when available
   _calcReliabilityScore(leg, mode, result) {
     let score = 100;
 
@@ -1516,7 +1509,7 @@ class UrbanNavApp {
       </div>`;
   }
 
-  // ─── FATIGUE WARNING ─────────────────────────────────────────
+  // fatigue warnings 
   _getFatigueReasons(leg, mode) {
     const reasons = [];
     if (mode === 'WALKING') {
@@ -1707,7 +1700,7 @@ class UrbanNavApp {
     this.renderWellnessCard();
   }
 
-  // ─── MULTI-ROUTE MAP DISPLAY ─────────────────────────────────
+  // Displays all available routes on the map, highlighting the selected one and showing duration markers for each route with transit icons when applicable
   _showAllRoutes(result, selectedIdx) {
     this._clearAltRenderers();
     const routes = result.routes;
@@ -1826,7 +1819,7 @@ class UrbanNavApp {
     });
   }
 
-  // ─── AI FEATURES ─────────────────────────────────────────────
+
 
   // Builds a plain-text summary of the current route for use as AI context
   _buildRouteContext() {
@@ -1868,7 +1861,7 @@ class UrbanNavApp {
     };
   }
 
-  // ── Toggle handler — show/hide insight box ───────────────────
+  // ── Toggle handler — show/hide insight box 
   toggleAiBox(boxId, btnId, label, btnEl) {
     const box = document.getElementById(boxId);
     if (!box) return;
@@ -1907,7 +1900,7 @@ class UrbanNavApp {
     }
   }
 
-  // ── Feature 1: Journey Summariser ────────────────────────────
+  // ── Feature 1: Route Summarisation 
   aiSummariseRoute(box) {
     box = box || document.getElementById('aiSummaryBox');
     if (!box) return;
@@ -1926,7 +1919,7 @@ class UrbanNavApp {
       </div>`;
   }
 
-  // ── Feature 2: Route Comparison ──────────────────────────────
+  // ── Feature 2: Route Comparison 
   aiCompareRoutes(box) {
     box = box || document.getElementById('aiSummaryBox');
     if (!box) return;
@@ -2024,7 +2017,7 @@ class UrbanNavApp {
     return text;
   }
 
-  // ── Feature 3: Weather-Journey Advisor ───────────────────────
+  // ── Feature 3: Weather-Journey Advisor
   aiWeatherAdvisor(box) {
     box = box || document.getElementById('aiWeatherBox');
     if (!box) return;
@@ -2092,11 +2085,8 @@ class UrbanNavApp {
     return advice;
   }
 
-  // ─── FR13: LIVE DELAY NOTIFICATIONS ─────────────────────────
-  // Checks TransportAPI departure data for delays and shows a
-  // notification bell in the nav bar when delays are detected.
-  // Called after loadLiveTransport() runs.
 
+  // Checks the cached train departure data for any delays or cancellations, and updates the UI accordingly
   checkForDelays() {
     if (!this.trainPlatformCache) return;
 
@@ -2152,13 +2142,13 @@ class UrbanNavApp {
 
     if (content) {
       content.innerHTML = delays.map(d => {
-        // Status pill — red for cancelled, amber for delayed
+        // Pill styling and text based on delay status
         const pillStyle  = d.cancelled
           ? 'background:#dc2626'
           : 'background:#d97706';
         const pillText   = d.cancelled ? 'Cancelled' : `${d.delayMins} min late`;
 
-        // Reason row — shown when TransportAPI provides a reason
+        // Reason section only shows if there's a reason provided, and is styled with an info icon
         const reasonHTML = d.reason
           ? `<div class="delay-item-reason">
                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="11" height="11">
@@ -2247,7 +2237,7 @@ class UrbanNavApp {
     }
   }
 
-  // ─── UI HELPERS ──────────────────────────────────────────────
+  // Utility methods for showing loading states and errors in the UI
   showLoading(elementId, message) {
     document.getElementById(elementId).innerHTML = `
       <div class="loading-row">
