@@ -1,9 +1,6 @@
-/* ============================================================
-   CSS CUSTOM PROPERTIES — Light & Dark themes
-   ============================================================ */
 :root {
   /* Brand */
-  --brand: #1E40AF;          /* dark blue */
+  --brand: #1E40AF;          
   --brand-dark: #1e3a8a;
   --brand-light: #EFF6FF;
 
@@ -11,7 +8,7 @@
   --bg-app:      #F2F3F5;
   --bg-surface:  #FFFFFF;
   --bg-input:    #F7F8FA;
-  --bg-nav:      #1E40AF;    /* top bar dark blue */
+  --bg-nav:      #1E40AF;    
 
   /* Text */
   --text-primary:   #0D1117;
@@ -61,9 +58,7 @@
   --shadow-md:  0 4px 16px rgba(0,0,0,0.4);
 }
 
-/* ============================================================
-   RESET & BASE
-   ============================================================ */
+
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 html {
@@ -82,9 +77,7 @@ html, body {
 button { cursor: pointer; font-family: var(--font); }
 input  { font-family: var(--font); }
 
-/* ============================================================
-   TOP NAV BAR
-   ============================================================ */
+
 .top-nav {
   position: fixed;
   top: 0; left: 0; right: 0;
@@ -176,9 +169,7 @@ input  { font-family: var(--font); }
   line-height: 1;
 }
 
-/* ============================================================
-   APP WRAPPER (below top nav)
-   ============================================================ */
+
 .app-wrapper {
   display: flex;
   height: calc(100vh - var(--nav-h));
@@ -186,9 +177,7 @@ input  { font-family: var(--font); }
   position: relative;
 }
 
-/* ============================================================
-   SIDEBAR
-   ============================================================ */
+
 .sidebar {
   width: var(--sidebar-w);
   min-width: var(--sidebar-w);
@@ -224,9 +213,7 @@ input  { font-family: var(--font); }
   font-weight: 600;
 }
 
-/* ============================================================
-   SECTION CARDS
-   ============================================================ */
+
 .section-card {
   background: var(--bg-surface);
   border-radius: 14px;
@@ -266,9 +253,7 @@ input  { font-family: var(--font); }
   color: var(--text-primary);
 }
 
-/* ============================================================
-   ROUTE INPUT — Citymapper style with dot + line
-   ============================================================ */
+
 .form-stack { display: flex; flex-direction: column; gap: 10px; }
 
 .route-input-row {
@@ -334,9 +319,7 @@ input  { font-family: var(--font); }
   margin: 0 6px 0 0;
 }
 
-/* ============================================================
-   BUTTONS
-   ============================================================ */
+
 .btn-primary {
   width: 100%;
   background: var(--brand);
@@ -366,9 +349,7 @@ input  { font-family: var(--font); }
 }
 .btn-success:hover { background: #15803d; }
 
-/* ============================================================
-   TRANSPORT MODES
-   ============================================================ */
+
 .mode-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -402,9 +383,7 @@ input  { font-family: var(--font); }
 .mode-label { font-size: 0.79rem; font-weight: 600; color: var(--text-secondary); }
 .mode-btn.active .mode-label { color: white; }
 
-/* ============================================================
-   SAVE STAR BUTTON
-   ============================================================ */
+
 .save-star-btn {
   width: 32px; height: 32px;
   border: 1.5px solid var(--border);
@@ -423,9 +402,7 @@ input  { font-family: var(--font); }
 .save-star-btn.saved svg { fill: #F59E0B; }
 .save-star-btn svg { width: 15px; height: 15px; }
 
-/* ============================================================
-   FAVOURITES PANEL
-   ============================================================ */
+
 .fav-panel {
   background: var(--bg-surface);
   border-bottom: 1px solid var(--border);
@@ -487,9 +464,7 @@ input  { font-family: var(--font); }
   margin-top: 2px;
 }
 
-/* ============================================================
-   ROUTE DETAILS (dynamically generated)
-   ============================================================ */
+
 .route-summary-card {
   background: linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%);
   border: 1px solid #BFDBFE;
@@ -612,9 +587,7 @@ input  { font-family: var(--font); }
 }
 .dest-found .sub { font-size: 0.86rem; margin-top: 4px; color: var(--text-muted); }
 
-/* ============================================================
-   LOADING & ERRORS
-   ============================================================ */
+
 .spinner {
   border: 2px solid var(--border);
   border-top: 2px solid var(--brand);
@@ -650,9 +623,7 @@ input  { font-family: var(--font); }
 .alert-error .title { font-weight: 600; font-size: 0.93rem; }
 .alert-error .body  { font-size: 0.86rem; margin-top: 3px; }
 
-/* ============================================================
-   WEATHER
-   ============================================================ */
+
 .weather-card {
   border-radius: 10px;
   background: linear-gradient(135deg, #EFF6FF, #ECFEFF);
@@ -689,9 +660,7 @@ input  { font-family: var(--font); }
 .weather-stat-label { font-size: 0.71rem; color: var(--text-muted); }
 .weather-stat-value { font-size: 0.93rem; font-weight: 600; color: var(--text-primary); }
 
-/* ============================================================
-   ENVIRONMENT
-   ============================================================ */
+
 .env-card-green {
   background: #F0FDF4;
   border: 1px solid #BBF7D0;
@@ -775,9 +744,7 @@ input  { font-family: var(--font); }
 [data-contrast="high"] .calorie-meta,
 [data-contrast="high"] .calorie-note     { color: #FFCC00; border-color: #FF6600; }
 
-/* ============================================================
-   LIVE TRANSPORT
-   ============================================================ */
+
 #liveTransportInfo { margin-top: 10px; }
 
 .transport-stop-card {
@@ -870,21 +837,15 @@ input  { font-family: var(--font); }
 
 [data-theme="dark"] .transport-error { background: #2D1515; color: #FCA5A5; }
 
-/* ============================================================
-   MAP
-   ============================================================ */
+
 .map-container { flex: 1; position: relative; overflow: hidden; }
 
 #map { height: 100%; width: 100%; }
 
-/* ============================================================
-   GOOGLE AUTOCOMPLETE
-   ============================================================ */
+/* Mobile map adjustments */
 .pac-container { z-index: 9999; border-radius: 10px; box-shadow: var(--shadow-md); }
 
-/* ============================================================
-   UTILS
-   ============================================================ */
+
 .hidden { display: none !important; }
 
 @keyframes spin {
@@ -892,16 +853,11 @@ input  { font-family: var(--font); }
   to   { transform: rotate(360deg); }
 }
 
-/* ================================================================
-   ALWAYS: No hamburger on any screen
-   ================================================================ */
+
 #toggleSidebar        { display: none !important; }
 .sidebar-close-mobile { display: none !important; }
 
-/* ================================================================
-   MOBILE-ONLY BUTTONS — Show Map, Show Weather, Show Eco
-   Hidden globally; mobile query makes them flex; desktop query forces none.
-   ================================================================ */
+
 .mobile-show-map {
   width: 100%;
   display: none;
@@ -960,9 +916,7 @@ input  { font-family: var(--font); }
   to   { opacity:1; transform:translateY(0); }
 }
 
-/* ================================================================
-   DESKTOP ≥ 769px — sidebar left + map right, always visible
-   ================================================================ */
+
 @media (min-width: 769px) {
   .app-wrapper {
     display: flex;
@@ -994,10 +948,6 @@ input  { font-family: var(--font); }
   .mobile-map-slot { display: none !important; }
 }
 
-/* ================================================================
-   MOBILE ≤ 768px — full scrollable page
-   Show Map / Show Weather / Show Eco as toggle buttons
-   ================================================================ */
 @media (max-width: 768px) {
 
   /* Nav */
@@ -1059,10 +1009,6 @@ input  { font-family: var(--font); }
   .departure-time-input { font-size: 1.07rem; }
 }
 
-
-/* ============================================================
-   AUTH MODAL
-   ============================================================ */
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -1208,9 +1154,7 @@ input  { font-family: var(--font); }
 }
 .auth-switch a:hover { text-decoration: underline; }
 
-/* ============================================================
-   FAVOURITES FLOATING DROPDOWN
-   ============================================================ */
+
 .fav-dropdown {
   position: fixed;
   top: calc(var(--nav-h) + 6px);
@@ -1338,9 +1282,6 @@ input  { font-family: var(--font); }
 .btn-reload-transport:hover { background: var(--brand-light); }
 
 
-/* ============================================================
-   HIGH CONTRAST MODE
-   ============================================================ */
 [data-contrast="high"] {
   --bg-app:      #000000;
   --bg-surface:  #0a0a0a;
@@ -1416,9 +1357,7 @@ input  { font-family: var(--font); }
   border-color: #FFFFFF;
 }
 
-/* ============================================================
-   ACCESSIBILITY PANEL
-   ============================================================ */
+
 .accessibility-dropdown {
   position: fixed;
   top: calc(var(--nav-h) + 6px);
@@ -1600,9 +1539,7 @@ input  { font-family: var(--font); }
     right: auto !important;
   }
 }
-/* ══════════════════════════════════════════════════════════
-   BEST MODE BUTTON
-══════════════════════════════════════════════════════════ */
+
 .mode-grid {
   grid-template-columns: repeat(5, 1fr) !important;
 }
@@ -1947,9 +1884,7 @@ input  { font-family: var(--font); }
     grid-template-columns: repeat(3, 1fr) !important;
   }
 }
-/* ============================================================
-   FEATURES 1-4: Energy, Reliability, Stress-Free, Fatigue
-   ============================================================ */
+
 
 /* ── Feature 3: Stress-Free Mode row (in sidebar below departure time) ── */
 .stress-free-row {
@@ -2169,9 +2104,7 @@ input  { font-family: var(--font); }
   border: 2px solid #22c55e !important;
 }
 
-/* ============================================================
-   COMMUTE WELLNESS SCORE — Weekly summary card
-   ============================================================ */
+
 
 .wellness-card {
   border: 1.5px solid var(--border);
@@ -2277,11 +2210,7 @@ input  { font-family: var(--font); }
   text-align: center;
 }
 
-/* ============================================================
-   WEEKLY WELLNESS BOTTOM SHEET
-   Slides up from the bottom — works on mobile and desktop.
-   On desktop it appears as a centred sheet with max-width.
-   ============================================================ */
+
 
 /* ── Backdrop — darkens the screen behind the sheet ── */
 .wellness-backdrop {
@@ -2416,11 +2345,7 @@ input  { font-family: var(--font); }
   color: #a78bfa !important;
 }
 
-/* ============================================================
-   WELLNESS FLOATING ACTION BUTTON (FAB)
-   Fixed bottom-right corner — never in the nav, never in the
-   sidebar. Works on mobile and desktop.
-   ============================================================ */
+
 
 .wellness-fab {
   position: fixed;
@@ -2564,10 +2489,7 @@ input  { font-family: var(--font); }
   color: #c4b5fd;
 }
 
-/* ============================================================
-   USER MENU — clickable username dropdown in nav bar
-   Contains: Weekly Wellness + Log out
-   ============================================================ */
+
 
 .user-menu-wrap {
   position: relative;
@@ -2796,12 +2718,12 @@ input  { font-family: var(--font); }
   font-size: 0.8rem;
 }
 
-/* ── Hidden state for insight boxes ── */
+/*  Hidden state for insight boxes */
 .ai-box-hidden {
   display: none;
 }
 
-/* ── Active (open) state for toggle buttons ── */
+/*  Active (open) state for toggle buttons  */
 .ai-btn-active {
   opacity: 0.85;
   box-shadow: inset 0 2px 4px rgba(0,0,0,0.15), 0 1px 3px rgba(0,0,0,0.1) !important;
@@ -2821,10 +2743,10 @@ input  { font-family: var(--font); }
   background: linear-gradient(135deg, #047857 0%, #0369a1 100%);
 }
 
-/* ============================================================
-   FR13 — LIVE DELAY NOTIFICATIONS
+/* 
+    LIVE DELAY NOTIFICATIONS
    Bell icon in nav, dropdown panel, toast popup
-   ============================================================ */
+*/
 
 /* ── Bell button wrapper ── */
 .delay-bell-wrap {
@@ -2851,7 +2773,7 @@ input  { font-family: var(--font); }
   border: 1.5px solid var(--bg-nav, #1E40AF);
 }
 
-/* ── Bell pulse animation (fires on new delay) ── */
+/* ─- Bell pulse animation (fires on new delay) ── */
 @keyframes bellPulse {
   0%,100% { transform: rotate(0deg); }
   15%      { transform: rotate(14deg); }
@@ -3092,7 +3014,7 @@ input  { font-family: var(--font); }
   border-color: rgba(220,38,38,0.3);
 }
 
-/* ── Running late reason in delay panel ── */
+/*  Running late reason in delay panel  */
 .delay-item-reason {
   display: flex;
   align-items: flex-start;
@@ -3111,7 +3033,7 @@ input  { font-family: var(--font); }
   color: #fbbf24;
 }
 
-/* ── Reason in toast popup ── */
+/*  Reason in toast popup  */
 .delay-popup-reason {
   font-size: 11px;
   color: #d1d5db;
