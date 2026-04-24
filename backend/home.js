@@ -8,7 +8,7 @@
       new google.maps.places.Autocomplete(document.getElementById('homeTo'));
     }
 
-    // Dark mode — saved to localStorage so it carries over to index.html
+    // Dark mode  saved to localStorage so it carries over to index.html
     var html  = document.documentElement;
     var saved = localStorage.getItem('urbannav_theme');
     if (saved) html.setAttribute('data-theme', saved);
@@ -19,7 +19,7 @@
       localStorage.setItem('urbannav_theme', next);
     });
 
-    // GO button — sends from/to/time as URL params to index.html
+    // GO button sends from/to/time as URL params to index.html
     document.getElementById('goBtn').addEventListener('click', goToApp);
     document.addEventListener('keydown', function(e) {
       if (e.key === 'Enter') goToApp();
@@ -39,7 +39,7 @@
       window.location.href = 'index.html?' + p.toString();
     }
 
-    // Login button — go straight to app if already logged in
+    // Login button go straight to app if already logged in
     document.getElementById('loginBtn').addEventListener('click', function() {
       var u = sessionStorage.getItem('urbannav_user');
       if (u) {
@@ -125,8 +125,8 @@
 
     // Restore login state on page load
     window.addEventListener('DOMContentLoaded', function() {
-      // homeUpdateAuthUI() handles this — defined in the inline script in home.html
-      // This fallback covers the case where the inline script hasn't run yet
+     // Restore energy selection from localStorage
+     // (also used by index.html to set default)
       var u = sessionStorage.getItem('urbannav_user');
       if (u && typeof homeUpdateAuthUI !== 'function') {
         document.getElementById('loginBtn').textContent = JSON.parse(u).first_name;
